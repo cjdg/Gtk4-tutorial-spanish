@@ -1,14 +1,15 @@
 # Tutorial de Gtk4 para principiantes
 
-La página github de tutorial también se encuentra disponible. Click [aqui]
-<!-- Generar la pagina web 
+<!-- 
+Generar la página web 
+La página github del tutorial también se encuentra disponible. Click [aqui]
 The github page of this tutorial is also available. Click [here](https://toshiocp.github.io/Gtk4-tutorial/).
 -->
 
 #### Contenido de este repositorio
 
 Este tutorial ilustra como escribir programas en C con la biblioteca Gtk4
-Se enfoca en prinpcipiantes, asi que el contenido esta limitado en los temas básicos.
+se enfoca en prinpcipiantes, asi que el contenido esta limitado a los temas básicos.
 La tabla de contenido se encuentra al final de esta introducción.
 
 - Sección 3 a la 21 describe las bases, con el ejemplo de un editor simple `tfe` (Text File Editor).
@@ -16,7 +17,7 @@ La tabla de contenido se encuentra al final de esta introducción.
 - Sección 26 a la 29 describe el modelo de lista y la vista lista (GtkListView, GtkGridView y GtkColumnView).
 también describe GtkExpression.
 
-La última version original de este tutorial (en inglés) se encuentra en [Gtk4-tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial).
+La última versión original de este tutorial (en inglés) se encuentra en [Gtk4-tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial).
 Puedes leerlo desde ahí directamente sin tener que descargar nada.
 
 #### Documentación Gtk4
