@@ -1,93 +1,93 @@
-# How to build Gtk4 Tutorial
+# Construir el Tutorial de Gtk4
 
-## Quick start guide
+## Guía rápida
 
-1. You need linux operationg system, ruby, rake, pandoc and latex system.
-2. download this repository and uncompress the file.
-3. change your current directory to the top directory of the source files.
-4. type `rake html` to create html files. The files are created under the `docs` directory.
-5. type `rake pdf` to create pdf a file. The file is created under the `latex` directory.
+1. Necesitas el sistema operativo linux, ruby, make, pandoc y latex instalados.
+2. Descarga este repositorio y descomprime el archivo.
+3. Cambia al directorio superior de los archivos fuente.
+4. Escribe `rake html` para crear archivos html. Los archivos se crearán dentro de la carpeta `docs`.
+5. Escribe `rake pdf`para crear el pdf. El archivo se creará dentro de la carpeta `latex`.
 
-## Prerequisites
+## Prerequisitos
 
-- Linux operationg system.
-The programs in this repository has been tested on Ubuntu 21.04.
-- Download the files in the repository.
-There are two ways to download.
-  1. Use git.
-Type `git clone https://github.com/ToshioCP/Gtk4-tutorial.git` on the command-line.
-  2. Download a zip file.
-Click on the `Code` button (green button) on the top page of the repository.
-Then, click "Download ZIP".
-- Ruby and rake.
-- Pandoc. It is used to convert markdown to html and/or latex.
-- Latex system. Texlive2020 or later version is recommended.
-It is used to generate the pdf file.
+- Sistema operativo Linux
+Los programas de este repositorio han sido probados en Ubuntu 21.04
+- Descarga los archivos en el repositorio.
+Hay 2 maneras de hacer la descarga.
+1. Usar git.
+Escribe `git clone https://github.com/cjdg/Gtk4-tutorial-spanish.git` en la línea de comandos.
+2. Descargar un archivo zip.
+Click en el botón `Code` en la página del repositorio.
+Después, click en "Download ZIP".
+- Ruby y rake.
+- Pandoc. Es usado para convertir archivos markdown a html y/o latex.
+- Latex. Textlive2020 o posterior.
+Se usa para generar el PDF.
 
-## Github flavored markdown
+## Markdown Github
 
-When you see [gtk4_tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial), you'll find the contents of the `Readme.md` file.
-This file is written in markdown language.
-Markdown files have `.md` suffix.
+Cuando ves el repositorio del [Tutorial Gtk4 en español](https://github.com/cjdg/Gtk4-tutorial-spanish), verás el contenido del archivo `Readme.md`.
+Este archivo está escrito en el lenguake Markdown
+Los archivos Markdown tienen el sufijo`.md`.
 
-There are several kinds of markdown language.
-`Readme.md` uses 'github flavored markdown', which is often shortened as GFM.
-Markdown files in the `gfm` directory are written in GFM.
-If you are not familiar with it, refer to the page [github flavor markdown spec](https://github.github.com/gfm/).
+Existen muchas versiones de Markdown.
+`Readme.md` usa la versión Github de Markdown (GFM).
+Los archivos Markdown en la carpeta `gfm` están escritos en GFM.
+Si no estás familiarizado con la GFM, puedes consultar la documentación en [github flavor markdown spec](https://github.github.com/gfm/).
 
-## Pandoc's markdown
+## Markdown pandoc
 
-This tutorial also uses another markdown -- 'pandoc's markdown'.
-Pandoc is a converter between markdown, html, latex, word docx and so on.
-This type of markdown is used to convert markdown to html and/or latex.
+Este tutorial tambien usa otro tipo de markdown, 'pandoc'.
+Pandoc es un convertidor entre markdown, latex, doc, docx, etc.
+Este tipo de markdown se usa para convertir markdown a html y/o latex.
 
-## .Src.md file
+## Archivo .Src.md
 
-.Src.md file has ".src.md" suffix.
-The syntax of .src.md file is similar to markdown but it has a special command which isn't included in markdown syntax.
-It is @@@ command.
-The command starts with a line begins with "@@@" and ends with a line "@@@".
-For example,
+Los archivos .Src.md tienen el sufijo ".src.md".
+La sintaxis de los archivos .src.md  es similar a markdown pero tienen un comando especial que no esta incluido en la sintaxis markdown.
+Es el comando @@@.
+Este comando inicia una línea con "@@@" y termina con una linea "@@@".
+Por ejemplo,
 
     @@@include
     tfeapplication.c
     @@@
 
-There are four types of @@@ command.
+Existen 4 tipos de comando @@@
 
 ### @@@include
 
-This type of @@@ command starts with a line "@@@include".
+Este tipo inicia con el comando @@@ con una línea "@@@include"
 
     @@@include
     tfeapplication.c
     @@@
 
-This command replaces itself with the texts read from the C source files surrounded by `@@@include` and `@@@`.
-If a function list follows the filename, only the functions are read.
+Este comando reemplaza el texto con el contenido del archivo C entre los comandos `@@@include` y `@@@`.
+Si la función precede al nombre de archivo, sólo serán importadas las funciones listadas.
 
     @@@include
     tfeapplication.c main startup
     @@@
 
-The command above is replaced by the contents of `main` and `startup` functions in the file `tfeapplication.c`.
+El comando aqui arriba será reemplazado por las funciones `main` y `startup` del archivo `tfeapplication.c`.
 
-Other language's source files are also possible.
-The following example shows that the ruby file 'lib_src2md.rb' is inserted by the command.
+Otros lenguajes pueden ser importados también
+El siguiente ejemplo importa el archivo  'lib_src2md.rb'
 
     @@@include
     lib_src2md.rb
     @@@
 
-You can't specify functions or methods unless the file is C source.
+No se puede insertar funciones que no sean de C.
 
-The inserted text is converted to fence code block.
-Fence code block begins with `~~~` and ends with `~~~`.
-The contents are displayed verbatim.
-`~~~` is look like a fence so the block is called "fence code block".
+El texto insertado es convertido para delimitar el bloque de código.
+El delimitador del bloque de código comienza con `~~~` y termina con `~~~`
+Los contenidos son mostrados tal cual.
+`~~~` parece una cerca, por lo que el bloque se llama "cerca de bloque de código"
 
-If the target markdown is GFM, then an info string can follow the beginning fence.
-The following example shows that the @@@ command includes a C source file `sample.c`.
+Si el objetivo markdown es GFM, entonces una cadena de información puede seguir al delimitador inicial.
+El siguiente ejemplo muestra como el comando @@@ incluye un archivo fuente C llamado `sample.c`
 
     $ cat src/sample.c
     int
@@ -111,24 +111,24 @@ The following example shows that the @@@ command includes a C source file `sampl
     ~~~
       ... ...
 
-Info strings are usually languages like C, ruby, xml and so on.
-This string is decided with the filename extension.
+Las cadenas de información son usualmente languajes como C, ruby, xml, etc.
+Esta cadena se procesa con la extensión del archivo.
 
 - `.c`   => C
 - `.rb`  => ruby
 - `.xml` => xml
 
-The supported languages are written in the `lang` method in `lib/lib_src2md.rb`.
+Los lenguajes permitidos estan escritos en el método `lang` en `lib/lib_src2md.rb`.
 
-A line number will be inserted at the top of each line in the code block.
-If you don't want to insert it, give "-N" option to @@@include command.
+Los números de línea serán insertados arriba de cada línea en el bloque de código.
+Si no deseas que se inserten, incluye la opción "-N" al comando @@@include
 
-Options:
+Opciones
 
-- `-n`: Inserts a line number at the top of each line (default).
-- `-N`: No line number is inserted.
+- `-n`: Inserta un número de línea arriba de cada línea (predeterminado).
+- `-N`: No se insertan números de línea.
 
-The following shows that the line numbers are inserted at the beginning of each line.
+El siguiente ejemplo muestra los números de linea y como son insertados al inicio de cada línea.
 
     $cat src/sample.src.md
       ... ...
@@ -147,8 +147,8 @@ The following shows that the line numbers are inserted at the beginning of each 
     ~~~
       ... ...
 
-If a markdown is an intermediate file to html, another type of info string follows the fence.
-If @@@include command doesn't have -N option, then the generated markdown is:
+Si un archivo markdown es un intermediario a uno html, otro tipo de información seguirá el delimitador
+Si el comando @@@include no tiene una opción -N, entonces el markdown generado será:
 
     ~~~{.C .numberLines}
     int
@@ -156,6 +156,11 @@ If @@@include command doesn't have -N option, then the generated markdown is:
       ... ...
     }
     ~~~
+
+La cadena de información `.C` específica lenguaje C.
+La cadena de información `.numberLines` es una clase del markdown pandoc.
+Si la clase de especifíca, pandoc genera el CSS para insertar los números de líneas al código fuente html.
+
 
 The info string `.C` specifies C language.
 The info string `.numberLines` is a class of the pandoc markdown.
