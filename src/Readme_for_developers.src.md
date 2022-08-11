@@ -324,20 +324,18 @@ De la misma forma, el método se ejecuta en la accion del archivo `Rakefile`
 
 ## Estructura del directorio
 
-There are seven directories under `gtk4_tutorial` directory.
-They are `gfm`, `docs`, `latex`, `src`, `image`, `test` and `lib`.
-Three directories `gfm`, `docs` and `latex` are the destination directories for GFM, html and latex files respectively.
-It is possible that these three directories don't exist before the conversion.
+Existen siete directorios dentro del tutorial.
+Son `gfm`, `docs`, `latex`, `src`, `image`, `test` y `lib`.
+Tres directorios: `gfm`, `docs` y `latex` son los destinos para GFM, html y latex.
+Es posible que estos directorios no existan antes de la conversión.
 
-- src: This directory contains .src.md files and C-related source files.
-- image: This directory contains image files like png or jpg.
-- gfm: `rake` converts .src.md files to GFM files and store them in this directory.
-- docs: `rake html` will convert .src.md files to html files and store them in this directory.
-- latex: `rake pdf` will convert .src.md files to latex files and store them in this directory.
-Finally it creates a pdf file in `latex` directory.
-- lib: This directory includes ruby library files.
-- test: This directory contains test files.
-The tests are carried out by typing `rake test` on the terminal.
+- src: Este directorio contiene los archivos .src.md y los archivos C relacionados.
+- image: Este directorio contiene imágenes.
+- gfm `rake` convierte los archivos .src.md a archivos GFM y los guarda en este directorio.
+- docs: `rake html` convertirá los archivos .src.md a html y los guarda en este directorio.
+- latex: `rake pdf` convertirá los archivos .src.md a latex y los guarda en este directorio y crea un pdf en el directorio.
+- lib: contiene las líbrerias de ruby.
+- test: contiene los archivos de prueba, estos se realizan escribiendo `rake test` en la terminal.
 
 ## Src directory and the top directory
 
