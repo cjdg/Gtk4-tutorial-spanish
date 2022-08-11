@@ -1,14 +1,11 @@
-# Tutorial de Gtk4 para principiantes
+# Gtk4 Tutorial for beginners
 
-La página github de tutorial también se encuentra disponible. Click [aqui]
-<!-- Generar la pagina web 
 The github page of this tutorial is also available. Click [here](https://toshiocp.github.io/Gtk4-tutorial/).
--->
 
 #### Contenido de este repositorio
 
 Este tutorial ilustra como escribir programas en C con la biblioteca Gtk4
-Se enfoca en prinpcipiantes, asi que el contenido esta limitado en los temas básicos.
+se enfoca en prinpcipiantes, asi que el contenido esta limitado a los temas básicos.
 La tabla de contenido se encuentra al final de esta introducción.
 
 - Sección 3 a la 21 describe las bases, con el ejemplo de un editor simple `tfe` (Text File Editor).
@@ -16,7 +13,7 @@ La tabla de contenido se encuentra al final de esta introducción.
 - Sección 26 a la 29 describe el modelo de lista y la vista lista (GtkListView, GtkGridView y GtkColumnView).
 también describe GtkExpression.
 
-La última version original de este tutorial (en inglés) se encuentra en [Gtk4-tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial).
+La última versión original de este tutorial (en inglés) se encuentra en [Gtk4-tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial).
 Puedes leerlo desde ahí directamente sin tener que descargar nada.
 
 #### Documentación Gtk4
@@ -52,37 +49,36 @@ Todas las preguntas son útiles y harán este tutorial mejor.
 Si deseas obtener una versión HTML o PDF, la puedes hacer com `rake`, que es una versión en ruby de make.
 Escribe `rake html` para HTML.
 Escribe `rake pdf` para PDF.
-Existe una documentación \("[Cómo construir el Tutorial Gtk4](gfm/Readme_for_developers.md)"\) que describe como hacerlo.
+Existe una documentación \("[Cómo construir el Tutorial Gtk4](src/gfm/Readme_for_developers.md)"\) que describe como hacerlo.
 
+## Table of contents
 
-## Tabla de Contenido
-
-1. [Prerequisitos y licencia](gfm/sec1.md)
-1. [Instalar Gtk4 en una distro Linux](gfm/sec2.md)
-1. [GtkApplication y GtkApplicationWindow](gfm/sec3.md)
+1. [Prerequisite and License](gfm/sec1.md)
+1. [Installing Gtk4 into Linux distributions](gfm/sec2.md)
+1. [GtkApplication and GtkApplicationWindow](gfm/sec3.md)
 1. [Widgets (1)](gfm/sec4.md)
 1. [Widgets (2)](gfm/sec5.md)
-1. [String y administración de memoria](gfm/sec6.md)
+1. [String and memory management](gfm/sec6.md)
 1. [Widgets (3)](gfm/sec7.md)
-1. [Definir un objeto hijo](gfm/sec8.md)
-1. [El archivo de interfaz de usuario (UI) y GtkBuilder](gfm/sec9.md)
-1. [Sistema de compilación (Build system)](gfm/sec10.md)
-1. [Inicialización y destrucción de instancias](gfm/sec11.md)
-1. [Señales](gfm/sec12.md)
-1. [Funciones en TfeTextView](gfm/sec13.md)
-1. [Funcioes en GtkNotebook](gfm/sec14.md)
+1. [Defining a Child object](gfm/sec8.md)
+1. [The User Interface (UI) file and GtkBuilder](gfm/sec9.md)
+1. [Build system](gfm/sec10.md)
+1. [Initialization and destruction of instances](gfm/sec11.md)
+1. [Signals](gfm/sec12.md)
+1. [Functions in TfeTextView](gfm/sec13.md)
+1. [Functions in GtkNotebook](gfm/sec14.md)
 1. [tfeapplication.c](gfm/sec15.md)
-1. [Archivos fuente tfe5](gfm/sec16.md)
-1. [Menu y acción](gfm/sec17.md)
+1. [tfe5 source files](gfm/sec16.md)
+1. [Menu and action](gfm/sec17.md)
 1. [Stateful action](gfm/sec18.md)
-1. [Archivo UI para menús y acciones](gfm/sec19.md)
-1. [GtkMenuButton, aceleradores, fuentes, pango y gsettings](gfm/sec20.md)
-1. [Plantilla XML y widgets compuestos](gfm/sec21.md)
-1. [GtkDrawingArea y Cairo](gfm/sec22.md)
-1. [Eventos periódicos](gfm/sec23.md)
-1. [Combinar GtkDrawingArea y TfeTextView](gfm/sec24.md)
-1. [Intérprete Tiny turtle graphics](gfm/sec25.md)
+1. [Ui file for menu and action entries](gfm/sec19.md)
+1. [GtkMenuButton, accelerators, font, pango and gsettings](gfm/sec20.md)
+1. [Template XML and composite widget](gfm/sec21.md)
+1. [GtkDrawingArea and Cairo](gfm/sec22.md)
+1. [Periodic Events](gfm/sec23.md)
+1. [Combine GtkDrawingArea and TfeTextView](gfm/sec24.md)
+1. [Tiny turtle graphics interpreter](gfm/sec25.md)
 1. [GtkListView](gfm/sec26.md)
-1. [GtkGridView y señal 'activate' ](gfm/sec27.md)
+1. [GtkGridView and activate signal](gfm/sec27.md)
 1. [GtkExpression](gfm/sec28.md)
 1. [GtkColumnView](gfm/sec29.md)

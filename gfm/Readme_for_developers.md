@@ -1,93 +1,93 @@
-# How to build Gtk4 Tutorial
+# Construir el Tutorial de Gtk4
 
-## Quick start guide
+## Guía rápida
 
-1. You need linux operationg system, ruby, rake, pandoc and latex system.
-2. download this repository and uncompress the file.
-3. change your current directory to the top directory of the source files.
-4. type `rake html` to create html files. The files are created under the `docs` directory.
-5. type `rake pdf` to create pdf a file. The file is created under the `latex` directory.
+1. Necesitas el sistema operativo linux, ruby, make, pandoc y latex instalados.
+2. Descarga este repositorio y descomprime el archivo.
+3. Cambia al directorio superior de los archivos fuente.
+4. Escribe `rake html` para crear archivos html. Los archivos se crearán dentro de la carpeta `docs`.
+5. Escribe `rake pdf`para crear el pdf. El archivo se creará dentro de la carpeta `latex`.
 
-## Prerequisites
+## Prerequisitos
 
-- Linux operationg system.
-The programs in this repository has been tested on Ubuntu 21.04.
-- Download the files in the repository.
-There are two ways to download.
-  1. Use git.
-Type `git clone https://github.com/ToshioCP/Gtk4-tutorial.git` on the command-line.
-  2. Download a zip file.
-Click on the `Code` button (green button) on the top page of the repository.
-Then, click "Download ZIP".
-- Ruby and rake.
-- Pandoc. It is used to convert markdown to html and/or latex.
-- Latex system. Texlive2020 or later version is recommended.
-It is used to generate the pdf file.
+- Sistema operativo Linux
+Los programas de este repositorio han sido probados en Ubuntu 21.04
+- Descarga los archivos en el repositorio.
+Hay 2 maneras de hacer la descarga.
+1. Usar git.
+Escribe `git clone https://github.com/cjdg/Gtk4-tutorial-spanish.git` en la línea de comandos.
+2. Descargar un archivo zip.
+Click en el botón `Code` en la página del repositorio.
+Después, click en "Download ZIP".
+- Ruby y rake.
+- Pandoc. Es usado para convertir archivos markdown a html y/o latex.
+- Latex. Textlive2020 o posterior.
+Se usa para generar el PDF.
 
-## Github flavored markdown
+## Markdown Github
 
-When you see [gtk4_tutorial github repository](https://github.com/ToshioCP/Gtk4-tutorial), you'll find the contents of the `Readme.md` file.
-This file is written in markdown language.
-Markdown files have `.md` suffix.
+Cuando ves el repositorio del [Tutorial Gtk4 en español](https://github.com/cjdg/Gtk4-tutorial-spanish), verás el contenido del archivo `Readme.md`.
+Este archivo está escrito en el lenguake Markdown
+Los archivos Markdown tienen el sufijo`.md`.
 
-There are several kinds of markdown language.
-`Readme.md` uses 'github flavored markdown', which is often shortened as GFM.
-Markdown files in the `gfm` directory are written in GFM.
-If you are not familiar with it, refer to the page [github flavor markdown spec](https://github.github.com/gfm/).
+Existen muchas versiones de Markdown.
+`Readme.md` usa la versión Github de Markdown (GFM).
+Los archivos Markdown en la carpeta `gfm` están escritos en GFM.
+Si no estás familiarizado con la GFM, puedes consultar la documentación en [github flavor markdown spec](https://github.github.com/gfm/).
 
-## Pandoc's markdown
+## Markdown pandoc
 
-This tutorial also uses another markdown -- 'pandoc's markdown'.
-Pandoc is a converter between markdown, html, latex, word docx and so on.
-This type of markdown is used to convert markdown to html and/or latex.
+Este tutorial tambien usa otro tipo de markdown, 'pandoc'.
+Pandoc es un convertidor entre markdown, latex, doc, docx, etc.
+Este tipo de markdown se usa para convertir markdown a html y/o latex.
 
-## .Src.md file
+## Archivo .Src.md
 
-.Src.md file has ".src.md" suffix.
-The syntax of .src.md file is similar to markdown but it has a special command which isn't included in markdown syntax.
-It is @@@ command.
-The command starts with a line begins with "@@@" and ends with a line "@@@".
-For example,
+Los archivos .Src.md tienen el sufijo ".src.md".
+La sintaxis de los archivos .src.md  es similar a markdown pero tienen un comando especial que no esta incluido en la sintaxis markdown.
+Es el comando @@@.
+Este comando inicia una línea con "@@@" y termina con una linea "@@@".
+Por ejemplo,
 
     @@@include
     tfeapplication.c
     @@@
 
-There are four types of @@@ command.
+Existen 4 tipos de comando @@@
 
 ### @@@include
 
-This type of @@@ command starts with a line "@@@include".
+Este tipo inicia con el comando @@@ con una línea "@@@include"
 
     @@@include
     tfeapplication.c
     @@@
 
-This command replaces itself with the texts read from the C source files surrounded by `@@@include` and `@@@`.
-If a function list follows the filename, only the functions are read.
+Este comando reemplaza el texto con el contenido del archivo C entre los comandos `@@@include` y `@@@`.
+Si la función precede al nombre de archivo, sólo serán importadas las funciones listadas.
 
     @@@include
     tfeapplication.c main startup
     @@@
 
-The command above is replaced by the contents of `main` and `startup` functions in the file `tfeapplication.c`.
+El comando aqui arriba será reemplazado por las funciones `main` y `startup` del archivo `tfeapplication.c`.
 
-Other language's source files are also possible.
-The following example shows that the ruby file 'lib_src2md.rb' is inserted by the command.
+Otros lenguajes pueden ser importados también
+El siguiente ejemplo importa el archivo  'lib_src2md.rb'
 
     @@@include
     lib_src2md.rb
     @@@
 
-You can't specify functions or methods unless the file is C source.
+No se puede insertar funciones que no sean de C.
 
-The inserted text is converted to fence code block.
-Fence code block begins with `~~~` and ends with `~~~`.
-The contents are displayed verbatim.
-`~~~` is look like a fence so the block is called "fence code block".
+El texto insertado es convertido para delimitar el bloque de código.
+El delimitador del bloque de código comienza con `~~~` y termina con `~~~`
+Los contenidos son mostrados tal cual.
+`~~~` parece una cerca, por lo que el bloque se llama "cerca de bloque de código"
 
-If the target markdown is GFM, then an info string can follow the beginning fence.
-The following example shows that the @@@ command includes a C source file `sample.c`.
+Si el objetivo markdown es GFM, entonces una cadena de información puede seguir al delimitador inicial.
+El siguiente ejemplo muestra como el comando @@@ incluye un archivo fuente C llamado `sample.c`
 
     $ cat src/sample.c
     int
@@ -111,24 +111,24 @@ The following example shows that the @@@ command includes a C source file `sampl
     ~~~
       ... ...
 
-Info strings are usually languages like C, ruby, xml and so on.
-This string is decided with the filename extension.
+Las cadenas de información son usualmente languajes como C, ruby, xml, etc.
+Esta cadena se procesa con la extensión del archivo.
 
 - `.c`   => C
 - `.rb`  => ruby
 - `.xml` => xml
 
-The supported languages are written in the `lang` method in `lib/lib_src2md.rb`.
+Los lenguajes permitidos estan escritos en el método `lang` en `lib/lib_src2md.rb`.
 
-A line number will be inserted at the top of each line in the code block.
-If you don't want to insert it, give "-N" option to @@@include command.
+Los números de línea serán insertados arriba de cada línea en el bloque de código.
+Si no deseas que se inserten, incluye la opción "-N" al comando @@@include
 
-Options:
+Opciones
 
-- `-n`: Inserts a line number at the top of each line (default).
-- `-N`: No line number is inserted.
+- `-n`: Inserta un número de línea arriba de cada línea (predeterminado).
+- `-N`: No se insertan números de línea.
 
-The following shows that the line numbers are inserted at the beginning of each line.
+El siguiente ejemplo muestra los números de linea y como son insertados al inicio de cada línea.
 
     $cat src/sample.src.md
       ... ...
@@ -147,8 +147,8 @@ The following shows that the line numbers are inserted at the beginning of each 
     ~~~
       ... ...
 
-If a markdown is an intermediate file to html, another type of info string follows the fence.
-If @@@include command doesn't have -N option, then the generated markdown is:
+Si un archivo markdown es un intermediario a uno html, otro tipo de información seguirá el delimitador
+Si el comando @@@include no tiene una opción -N, entonces el markdown generado será:
 
     ~~~{.C .numberLines}
     int
@@ -157,13 +157,13 @@ If @@@include command doesn't have -N option, then the generated markdown is:
     }
     ~~~
 
-The info string `.C` specifies C language.
-The info string `.numberLines` is a class of the pandoc markdown.
-If the class is given, pandoc generates CSS to insert line numbers to the source code in the html file.
-That's why the fence code block in the markdown doesn't have line numbers, which is different from gfm markdown.
-If `-N` option is given, then the info string is `{.C}` only.
+La cadena de información `.C` específica lenguaje C.
+La cadena de información `.numberLines` es una clase del markdown pandoc.
+Si la clase se especifíca, pandoc genera el CSS para insertar los números de líneas al código fuente html.
+Esa es la razón de usar el delimitador de bloque de código, por que markdown no tiene líneas numeradas, que es diferente del markdown GFM.
+Si se usa la opción `-N`, sólo aparecerá la cadena informativa `{.C`.
 
-If a markdown is an intermediate file to latex, the same info string follows the beginning fence.
+Si un archivo markdown es un intermediario a un archivo latex, la misma cadena sigue al delimitador.
 
     ~~~{.C .numberLines}
     int
@@ -171,11 +171,11 @@ If a markdown is an intermediate file to latex, the same info string follows the
       ... ...
     }
     ~~~
-
-Rake uses pandoc with --listings option to convert the markdown to a latex file.
-The generated latex file uses 'listings package' to list source files instead of verbatim environment.
-The markdown above is converted to the following latex source file.
-
+    
+Rake usa pandoc con la opción `--listings`para convertir el markdown a un archivo latex.
+El archivo generado usa `listings package` para listar los archivos fuente en vez del entorno inmediato.
+El markdown generado arriba se convierte al archivo latex siguiente:
+    
     \begin{lstlisting}[language=C, numbers=left]
     int
     main (int argc, char **argv) {
@@ -183,46 +183,47 @@ The markdown above is converted to the following latex source file.
     }
     \end{lstlisting}
 
-Listing package can color or emphasize keywords, strings, comments and directives.
-But it doesn't really analyze the syntax of the language, so the emphasis tokens are limited.
+El listado de paquetes puede colorear o enfátizar palabras clave, cadenas, comentarios y directivas.
+Pero no analiza la sintaxis del lenguaje, sólo las palabras clave.
 
- @@@include command has two advantages.
+El comando @@@include posee 2 ventajas:
 
-1. Less typing.
-2. You don't need to modify your .src.md file, even if the C source file is modified.
+1. Escribir menos.
+2. No necesitas modificar el archivo .Src.md, aun si cambias el archivo fuente C.
 
 ### @@@shell
 
-This type of @@@ command starts with a line begins with "@@@shell".
+Este tipo de comando @@@ comienza con una línea "@@@shell":
 
     @@@shell
     shell command
      ... ...
     @@@
 
-This command replaces itself with:
+Este comando se reemplaza a si mismo con:
 
-- the shell command
-- the standard output from the shell command
+- el comando shell
+- la salida estándar del comando
 
-For example,
+Por ejemplo:
 
     @@@shell
     wc Rakefile
     @@@
 
-This is converted to:
+Se convierte a:
 
     ~~~
     $ wc Rakefile
     164  475 4971 Rakefile
     ~~~
 
-### @@@if series
+### series @@@if 
 
-This type of @@@ command starts with a line begins with "@@@if", and followed by "@@@elif", "@@@else" or "@@@end".
-This command is similar to "#if", "#elif", #else" and "#endif" directives in the C preprocessor.
-For example,
+Este tipo de comando @@@ comienza con una linea "@@@if"m, y seguida por "@@@elif", "@@@else@" o "@@@end".
+Es similar a "#if", "#elif", "#else" y "#endif" en el preprocesador C.
+Por ejemplo,
+
 
     @@@if gfm
     Refer to  [tfetextview API reference](tfetextview_doc.md)
@@ -232,26 +233,26 @@ For example,
     Refer to tfetextview API reference in appendix.
     @@@end
 
-`@@@if` and `@@@elif` have conditions.
-They are `gfm`, `html` or `latex` so far.
+`@@@if` y `@@@elif` poseen condiciones
+Son `gfm`, `html` o `latex` hasta ahora.
 
-- gfm: if the target is GFM
-- html: if the target is html
-- latex: if the target is pdf.
+- gfm: si el objetivo es GFM
+- html: si el objetivo es html
+- latex: si el objetivo es pdf.
 
-Other type of conditions may be available in the future version.
+Otros condicionales pueden estar disponibles en versiones futuras.
 
-The code analyzing @@@if series command is rather complicated.
-It is based on the state diagram below.
+El analizador de las series @@@if es un poco complicado.
+Esta basado en el diagrama de estados de abajo.
 
-![state diagram](../image/state_diagram.png)
+![diagrama de estado](../image/state_diagram.png)
 
 ### @@@table
 
-This type of @@@ command starts with a line begins with "@@@table".
-The contents of this command is a table of the GFM or pandoc's markdown.
-The command makes a table easy to read.
-For example, a text file `sample.md` has a table like this:
+Este comando @@@ comienza con una línea "@@@table".
+El contenido es una tabla en formato GFM o pandoc.
+El comando crea una table fácil de leer.
+Por ejemplo, un archivo `sample.md` posee una tabla de la siguiente manera:
 
     Price list
 
@@ -262,7 +263,7 @@ For example, a text file `sample.md` has a table like this:
     |PC|$500|
     @@@
 
-The command changes this into:
+El comando se transforma en lo siguiente:
 
 ~~~
 Price list
@@ -273,69 +274,68 @@ Price list
 | PC  |$500 |
 ~~~
 
-This command just changes the appearance of the table.
-There's no influence on html/latex files that is converted from the markdown.
-Notice that the command supports only the above type of markdown table format.
+Este comando cambia la apariencia de la tabla.
+No influye en los archivos html/latex que son convertidos desde markdown.
+El comando sólo soporta el formato arriba mencionado.
 
-A script `mktbl.rb` supports this command.
-If you run the script like this:
+El script `mktbl.rb` soporta este comando.
+Si ejecutas el script:
 
 ~~~
 $ ruby mktbl.rb sample.md
 ~~~
 
-Then, the tables in 'sample.md' will be arranged.
-The script also makes a backup file `sample.md.bak`.
+Las tablas en 'sample.md' serán organizadas
+El script tambien hace un respaldo `sample.md.bak`
 
-The task of the script seems easy, but the program is not so simple.
-The script `mktbl.rb` uses a library `lib/lib_src2md.rb`
+La tarea del script parece fácil, pero el programa no es tan simple.
+El script `mktbl.rb` usa la líbreria `lib/lib_src2md.rb`
 
-@@@commands are effective in the whole text.
-This means you can't stop the @@@commands.
-But sometimes you want to show the commands literally like this document.
-One solution is to add four blanks at the top of the line.
-Then @@@commands are not effective because @@@commands must be at the top of the line.
+Los comandos @@@ son efectivos en todo el texto.
+Esto significa que no puedes detenerlos.
+Pero algunas veces necesitas mostrar los comandos como en este documento.
+Una solución es agregar 4 espacios al inicio de la línea.
+Entonces los comandos @@@ no son efectivos por que deben estar al inicio de la línea.
 
-## Conversion
+## Conversiones
 
-The @@@ commands are carried out by a method `src2md`,
-which is in the file `lib/lib_src2md.rb`.
-This method converts `.src.md` file into `.md` file.
-In addition, some other conversions are made by `src2md` method.
+Los comandos @@@ son usados por el método `src2md`
+el cual se encuentra en el archivo `lib/lib_src2md.rb`
+Este método convierte los archivos `.src.md` en archivos `.md`.
+Adicionalmente, otras conversiones son realizadas por el método `src2md`.
 
-- Relative links are changed according to the change of the base directory.
-- Size option in an image link is removed when the destination is GFM or html.
-- Relative link is removed except .src.md files when the destination is html.
-- Relative link is removed when the destination is latex.
+- Los vínculos relativos se sustituyen de acuerdo al cambio en el directorio base.
+- La opción de tamaño del link de imagen se elimina cuando el destino es GFM o html.
+- Los vínculos relativos se eliminan menos los relativos a .src.md cuando el destino es GFM o html.
+- Los vínculos relativos se eliminan cuando el destino es latex.
 
-The order of the conversions are:
+El orden de las conversiones es:
 
 1. @@@if
 2. @@@table
 3. @@@include
 4. @@@shell
-5. others
+5. otros
 
-There is the `src2md.rb` file in the top directory of this repository.
-It just invokes the method `src2md`.
-In the same way, the method is called in the action in the `Rakefile`.
+Hay un archivo `src2md.rb` en el directorio principal.
+Invoca el método `src2md`.
+De la misma forma, el método se ejecuta en la accion del archivo `Rakefile`
 
-## Directory structure
 
-There are seven directories under `gtk4_tutorial` directory.
-They are `gfm`, `docs`, `latex`, `src`, `image`, `test` and `lib`.
-Three directories `gfm`, `docs` and `latex` are the destination directories for GFM, html and latex files respectively.
-It is possible that these three directories don't exist before the conversion.
+## Estructura del directorio
 
-- src: This directory contains .src.md files and C-related source files.
-- image: This directory contains image files like png or jpg.
-- gfm: `rake` converts .src.md files to GFM files and store them in this directory.
-- docs: `rake html` will convert .src.md files to html files and store them in this directory.
-- latex: `rake pdf` will convert .src.md files to latex files and store them in this directory.
-Finally it creates a pdf file in `latex` directory.
-- lib: This directory includes ruby library files.
-- test: This directory contains test files.
-The tests are carried out by typing `rake test` on the terminal.
+Existen siete directorios dentro del tutorial.
+Son `gfm`, `docs`, `latex`, `src`, `image`, `test` y `lib`.
+Tres directorios: `gfm`, `docs` y `latex` son los destinos para GFM, html y latex.
+Es posible que estos directorios no existan antes de la conversión.
+
+- src: Este directorio contiene los archivos .src.md y los archivos C relacionados.
+- image: Este directorio contiene imágenes.
+- gfm `rake` convierte los archivos .src.md a archivos GFM y los guarda en este directorio.
+- docs: `rake html` convertirá los archivos .src.md a html y los guarda en este directorio.
+- latex: `rake pdf` convertirá los archivos .src.md a latex y los guarda en este directorio y crea un pdf en el directorio.
+- lib: contiene las líbrerias de ruby.
+- test: contiene los archivos de prueba, estos se realizan escribiendo `rake test` en la terminal.
 
 ## Src directory and the top directory
 
