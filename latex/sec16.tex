@@ -1,0 +1,733 @@
+\hypertarget{tfe5-source-files}{%
+\section{tfe5 source files}\label{tfe5-source-files}}
+
+\hypertarget{how-to-compile-and-execute-the-text-editor-tfe.}{%
+\subsection{How to compile and execute the text editor
+`tfe'.}\label{how-to-compile-and-execute-the-text-editor-tfe.}}
+
+First, source files are shown in the later subsections. How to download
+them is written at the end of the previous section.
+
+The following is the instruction of compilation and execution.
+
+\begin{itemize}
+\tightlist
+\item
+  You need meson and ninja.
+\item
+  Set environment variables if necessary. If you have installed gtk4
+  from the source and you preferred the option
+  \passthrough{\lstinline!--prefix $HOME/local!} (see Section 2), type
+  \passthrough{\lstinline!. env.sh!} to set the environment variables.
+\end{itemize}
+
+\begin{lstlisting}
+$ . env.sh
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  change your current directory to \passthrough{\lstinline!src/tfe5!}
+  directory.
+\item
+  type \passthrough{\lstinline!meson \_build!} for configuration.
+\item
+  type \passthrough{\lstinline!ninja -C \_build!} for compilation. Then
+  the application \passthrough{\lstinline!tfe!} is built under the
+  \passthrough{\lstinline!\_build!} directory.
+\item
+  type \passthrough{\lstinline!\_build/tfe!} to execute it.
+\end{itemize}
+
+Then the window appears. There are four buttons,
+\passthrough{\lstinline!New!}, \passthrough{\lstinline!Open!},
+\passthrough{\lstinline!Save!} and \passthrough{\lstinline!Close!}.
+
+\begin{itemize}
+\tightlist
+\item
+  Click on \passthrough{\lstinline!Open!} button, then a
+  FileChooserDialog appears. Choose a file in the list and click on
+  \passthrough{\lstinline!Open!} button. Then the file is read and a new
+  Notebook Page appears.
+\item
+  Edit the file and click on \passthrough{\lstinline!Save!} button, then
+  the text is saved to the original file.
+\item
+  Click \passthrough{\lstinline!Close!}, then the Notebook Page
+  disappears.
+\item
+  Click \passthrough{\lstinline!Close!} again, then the
+  \passthrough{\lstinline!Untitled!} Notebook Page disappears and at the
+  same time the application quits.
+\end{itemize}
+
+This is a very simple editor. It is a good practice for you to add more
+features.
+
+\hypertarget{meson.build}{%
+\subsection{meson.build}\label{meson.build}}
+
+\begin{lstlisting}[numbers=left]
+project('tfe', 'c')
+
+gtkdep = dependency('gtk4')
+
+gnome=import('gnome')
+resources = gnome.compile_resources('resources','tfe.gresource.xml')
+
+sourcefiles=files('tfeapplication.c', 'tfenotebook.c', '../tfetextview/tfetextview.c')
+
+executable('tfe', sourcefiles, resources, dependencies: gtkdep)
+\end{lstlisting}
+
+\hypertarget{tfe.gresource.xml}{%
+\subsection{tfe.gresource.xml}\label{tfe.gresource.xml}}
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/ToshioCP/tfe">
+    <file>tfe.ui</file>
+  </gresource>
+</gresources>
+\end{lstlisting}
+
+\hypertarget{tfe.ui}{%
+\subsection{tfe.ui}\label{tfe.ui}}
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <object class="GtkApplicationWindow" id="win">
+    <property name="title">file editor</property>
+    <property name="default-width">600</property>
+    <property name="default-height">400</property>
+    <child>
+      <object class="GtkBox" id="boxv">
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <child>
+          <object class="GtkBox" id="boxh">
+            <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+            <child>
+              <object class="GtkLabel" id="dmy1">
+                <property name="width-chars">10</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnn">
+                <property name="label">New</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btno">
+                <property name="label">Open</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="dmy2">
+                <property name="hexpand">TRUE</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btns">
+                <property name="label">Save</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnc">
+                <property name="label">Close</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="dmy3">
+                <property name="width-chars">10</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkNotebook" id="nb">
+            <property name="scrollable">TRUE</property>
+            <property name="hexpand">TRUE</property>
+            <property name="vexpand">TRUE</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
+\end{lstlisting}
+
+\hypertarget{tfe.h}{%
+\subsection{tfe.h}\label{tfe.h}}
+
+\begin{lstlisting}[language=C, numbers=left]
+#include <gtk/gtk.h>
+
+#include "../tfetextview/tfetextview.h"
+#include "tfenotebook.h"
+\end{lstlisting}
+
+\hypertarget{tfeapplication.c}{%
+\subsection{tfeapplication.c}\label{tfeapplication.c}}
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfe.h"
+
+static void
+open_cb (GtkNotebook *nb) {
+  notebook_page_open (nb);
+}
+
+static void
+new_cb (GtkNotebook *nb) {
+  notebook_page_new (nb);
+}
+
+static void
+save_cb (GtkNotebook *nb) {
+  notebook_page_save (nb);
+}
+
+static void
+close_cb (GtkNotebook *nb) {
+  notebook_page_close (GTK_NOTEBOOK (nb));
+}
+
+static void
+app_activate (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+  GtkWidget *boxv = gtk_window_get_child (GTK_WINDOW (win));
+  GtkNotebook *nb = GTK_NOTEBOOK (gtk_widget_get_last_child (boxv));
+
+  notebook_page_new (nb);
+  gtk_widget_show (GTK_WIDGET (win));
+}
+
+static void
+app_open (GApplication *application, GFile ** files, gint n_files, const gchar *hint) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+  GtkWidget *boxv = gtk_window_get_child (GTK_WINDOW (win));
+  GtkNotebook *nb = GTK_NOTEBOOK (gtk_widget_get_last_child (boxv));
+  int i;
+
+  for (i = 0; i < n_files; i++)
+    notebook_page_new_with_file (nb, files[i]);
+  if (gtk_notebook_get_n_pages (nb) == 0)
+    notebook_page_new (nb);
+  gtk_widget_show (win);
+}
+
+static void
+app_startup (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkBuilder *build;
+  GtkApplicationWindow *win;
+  GtkNotebook *nb;
+  GtkButton *btno;
+  GtkButton *btnn;
+  GtkButton *btns;
+  GtkButton *btnc;
+
+  build = gtk_builder_new_from_resource ("/com/github/ToshioCP/tfe/tfe.ui");
+  win = GTK_APPLICATION_WINDOW (gtk_builder_get_object (build, "win"));
+  nb = GTK_NOTEBOOK (gtk_builder_get_object (build, "nb"));
+  gtk_window_set_application (GTK_WINDOW (win), app);
+  btno = GTK_BUTTON (gtk_builder_get_object (build, "btno"));
+  btnn = GTK_BUTTON (gtk_builder_get_object (build, "btnn"));
+  btns = GTK_BUTTON (gtk_builder_get_object (build, "btns"));
+  btnc = GTK_BUTTON (gtk_builder_get_object (build, "btnc"));
+  g_signal_connect_swapped (btno, "clicked", G_CALLBACK (open_cb), nb);
+  g_signal_connect_swapped (btnn, "clicked", G_CALLBACK (new_cb), nb);
+  g_signal_connect_swapped (btns, "clicked", G_CALLBACK (save_cb), nb);
+  g_signal_connect_swapped (btnc, "clicked", G_CALLBACK (close_cb), nb);
+  g_object_unref(build);
+
+GdkDisplay *display;
+
+  display = gtk_widget_get_display (GTK_WIDGET (win));
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gtk_css_provider_load_from_data (provider, "textview {padding: 10px; font-family: monospace; font-size: 12pt;}", -1);
+  gtk_style_context_add_provider_for_display (display, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+}
+
+#define APPLICATION_ID "com.github.ToshioCP.tfe"
+
+int
+main (int argc, char **argv) {
+  GtkApplication *app;
+  int stat;
+
+  app = gtk_application_new (APPLICATION_ID, G_APPLICATION_HANDLES_OPEN);
+
+  g_signal_connect (app, "startup", G_CALLBACK (app_startup), NULL);
+  g_signal_connect (app, "activate", G_CALLBACK (app_activate), NULL);
+  g_signal_connect (app, "open", G_CALLBACK (app_open), NULL);
+
+  stat =g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+  return stat;
+}
+\end{lstlisting}
+
+\hypertarget{tfenotebook.h}{%
+\subsection{tfenotebook.h}\label{tfenotebook.h}}
+
+\begin{lstlisting}[language=C, numbers=left]
+void
+notebook_page_save(GtkNotebook *nb);
+
+void
+notebook_page_close (GtkNotebook *nb);
+
+void
+notebook_page_open (GtkNotebook *nb);
+
+void
+notebook_page_new_with_file (GtkNotebook *nb, GFile *file);
+
+void
+notebook_page_new (GtkNotebook *nb);
+\end{lstlisting}
+
+\hypertarget{tfenotebook.c}{%
+\subsection{tfenotebook.c}\label{tfenotebook.c}}
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfe.h"
+
+/* The returned string should be freed with g_free() when no longer needed. */
+static gchar*
+get_untitled () {
+  static int c = -1;
+  if (++c == 0) 
+    return g_strdup_printf("Untitled");
+  else
+    return g_strdup_printf ("Untitled%u", c);
+}
+
+static TfeTextView *
+get_current_textview (GtkNotebook *nb) {
+  int i;
+  GtkWidget *scr;
+  GtkWidget *tv;
+
+  i = gtk_notebook_get_current_page (nb);
+  scr = gtk_notebook_get_nth_page (nb, i);
+  tv = gtk_scrolled_window_get_child (GTK_SCROLLED_WINDOW (scr));
+  return TFE_TEXT_VIEW (tv);
+}
+
+static void
+file_changed_cb (TfeTextView *tv, GtkNotebook *nb) {
+  GtkWidget *scr;
+  GtkWidget *label;
+  GFile *file;
+  char *filename;
+
+  file = tfe_text_view_get_file (tv);
+  scr = gtk_widget_get_parent (GTK_WIDGET (tv));
+  if (G_IS_FILE (file)) {
+    filename = g_file_get_basename (file);
+    g_object_unref (file);
+  } else
+    filename = get_untitled ();
+  label = gtk_label_new (filename);
+  g_free (filename);
+  gtk_notebook_set_tab_label (nb, scr, label);
+}
+
+void
+notebook_page_save (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  TfeTextView *tv;
+
+  tv = get_current_textview (nb);
+  tfe_text_view_save (TFE_TEXT_VIEW (tv));
+}
+
+void
+notebook_page_close (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *win;
+  int i;
+
+  if (gtk_notebook_get_n_pages (nb) == 1) {
+    win = gtk_widget_get_ancestor (GTK_WIDGET (nb), GTK_TYPE_WINDOW);
+    gtk_window_destroy(GTK_WINDOW (win));
+  } else {
+    i = gtk_notebook_get_current_page (nb);
+    gtk_notebook_remove_page (GTK_NOTEBOOK (nb), i);
+  }
+}
+
+static void
+notebook_page_build (GtkNotebook *nb, GtkWidget *tv, char *filename) {
+  GtkWidget *scr = gtk_scrolled_window_new ();
+  GtkNotebookPage *nbp;
+  GtkWidget *lab;
+  int i;
+
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (tv), GTK_WRAP_WORD_CHAR);
+  gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scr), tv);
+  lab = gtk_label_new (filename);
+  i = gtk_notebook_append_page (nb, scr, lab);
+  nbp = gtk_notebook_get_page (nb, scr);
+  g_object_set (nbp, "tab-expand", TRUE, NULL);
+  gtk_notebook_set_current_page (nb, i);
+  g_signal_connect (GTK_TEXT_VIEW (tv), "change-file", G_CALLBACK (file_changed_cb), nb);
+}
+
+static void
+open_response (TfeTextView *tv, int response, GtkNotebook *nb) {
+  GFile *file;
+  char *filename;
+
+  if (response != TFE_OPEN_RESPONSE_SUCCESS || ! G_IS_FILE (file = tfe_text_view_get_file (tv))) {
+    g_object_ref_sink (tv);
+    g_object_unref (tv);
+  }else {
+    filename = g_file_get_basename (file);
+    g_object_unref (file);
+    notebook_page_build (nb, GTK_WIDGET (tv), filename);
+  }
+}
+
+void
+notebook_page_open (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *tv;
+
+  if ((tv = tfe_text_view_new ()) == NULL)
+    return;
+  g_signal_connect (TFE_TEXT_VIEW (tv), "open-response", G_CALLBACK (open_response), nb);
+  tfe_text_view_open (TFE_TEXT_VIEW (tv), GTK_WINDOW (gtk_widget_get_ancestor (GTK_WIDGET (nb), GTK_TYPE_WINDOW)));
+}
+
+void
+notebook_page_new_with_file (GtkNotebook *nb, GFile *file) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+  g_return_if_fail(G_IS_FILE (file));
+
+  GtkWidget *tv;
+  char *filename;
+
+  if ((tv = tfe_text_view_new_with_file (file)) == NULL)
+    return; /* read error */
+  filename = g_file_get_basename (file);
+  notebook_page_build (nb, tv, filename);
+}
+
+void
+notebook_page_new (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *tv;
+  char *filename;
+
+  if ((tv = tfe_text_view_new ()) == NULL)
+    return;
+  filename = get_untitled ();
+  notebook_page_build (nb, tv, filename);
+}
+\end{lstlisting}
+
+\hypertarget{tfetextview.h}{%
+\subsection{tfetextview.h}\label{tfetextview.h}}
+
+\begin{lstlisting}[language=C, numbers=left]
+#ifndef __TFE_TEXT_VIEW_H__
+#define __TFE_TEXT_VIEW_H__
+
+#include <gtk/gtk.h>
+
+#define TFE_TYPE_TEXT_VIEW tfe_text_view_get_type ()
+G_DECLARE_FINAL_TYPE (TfeTextView, tfe_text_view, TFE, TEXT_VIEW, GtkTextView)
+
+/* "open-response" signal response */
+enum TfeTextViewOpenResponseType
+{
+  TFE_OPEN_RESPONSE_SUCCESS,
+  TFE_OPEN_RESPONSE_CANCEL,
+  TFE_OPEN_RESPONSE_ERROR
+};
+
+GFile *
+tfe_text_view_get_file (TfeTextView *tv);
+
+void
+tfe_text_view_open (TfeTextView *tv, GtkWindow *win);
+
+void
+tfe_text_view_save (TfeTextView *tv);
+
+void
+tfe_text_view_saveas (TfeTextView *tv);
+
+GtkWidget *
+tfe_text_view_new_with_file (GFile *file);
+
+GtkWidget *
+tfe_text_view_new (void);
+
+#endif /* __TFE_TEXT_VIEW_H__ */
+\end{lstlisting}
+
+\hypertarget{tfetextview.c}{%
+\subsection{tfetextview.c}\label{tfetextview.c}}
+
+\begin{lstlisting}[language=C, numbers=left]
+#include <string.h>
+#include "tfetextview.h"
+
+struct _TfeTextView {
+  GtkTextView parent;
+  GFile *file;
+};
+
+G_DEFINE_TYPE (TfeTextView, tfe_text_view, GTK_TYPE_TEXT_VIEW);
+
+enum {
+  CHANGE_FILE,
+  OPEN_RESPONSE,
+  NUMBER_OF_SIGNALS
+};
+
+static guint tfe_text_view_signals[NUMBER_OF_SIGNALS];
+
+static void
+tfe_text_view_dispose (GObject *gobject) {
+  TfeTextView *tv = TFE_TEXT_VIEW (gobject);
+
+  if (G_IS_FILE (tv->file))
+    g_clear_object (&tv->file);
+
+  G_OBJECT_CLASS (tfe_text_view_parent_class)->dispose (gobject);
+}
+
+static void
+tfe_text_view_init (TfeTextView *tv) {
+  tv->file = NULL;
+}
+
+static void
+tfe_text_view_class_init (TfeTextViewClass *class) {
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+  object_class->dispose = tfe_text_view_dispose;
+  tfe_text_view_signals[CHANGE_FILE] = g_signal_new ("change-file",
+                                 G_TYPE_FROM_CLASS (class),
+                                 G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+                                 0 /* class offset */,
+                                 NULL /* accumulator */,
+                                 NULL /* accumulator data */,
+                                 NULL /* C marshaller */,
+                                 G_TYPE_NONE /* return_type */,
+                                 0     /* n_params */
+                                 );
+  tfe_text_view_signals[OPEN_RESPONSE] = g_signal_new ("open-response",
+                                 G_TYPE_FROM_CLASS (class),
+                                 G_SIGNAL_RUN_LAST | G_SIGNAL_NO_RECURSE | G_SIGNAL_NO_HOOKS,
+                                 0 /* class offset */,
+                                 NULL /* accumulator */,
+                                 NULL /* accumulator data */,
+                                 NULL /* C marshaller */,
+                                 G_TYPE_NONE /* return_type */,
+                                 1     /* n_params */,
+                                 G_TYPE_INT
+                                 );
+}
+
+GFile *
+tfe_text_view_get_file (TfeTextView *tv) {
+  g_return_val_if_fail (TFE_IS_TEXT_VIEW (tv), NULL);
+
+  if (G_IS_FILE (tv->file))
+    return g_file_dup (tv->file);
+  else
+    return NULL;
+}
+
+static gboolean
+save_file (GFile *file, GtkTextBuffer *tb, GtkWindow *win) {
+  GtkTextIter start_iter;
+  GtkTextIter end_iter;
+  gchar *contents;
+  gboolean stat;
+  GtkWidget *message_dialog;
+  GError *err = NULL;
+
+  gtk_text_buffer_get_bounds (tb, &start_iter, &end_iter);
+  contents = gtk_text_buffer_get_text (tb, &start_iter, &end_iter, FALSE);
+  if (g_file_replace_contents (file, contents, strlen (contents), NULL, TRUE, G_FILE_CREATE_NONE, NULL, NULL, &err)) {
+    gtk_text_buffer_set_modified (tb, FALSE);
+    stat = TRUE;
+  } else {
+    message_dialog = gtk_message_dialog_new (win, GTK_DIALOG_MODAL,
+                                             GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                            "%s.\n", err->message);
+    g_signal_connect (message_dialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
+    gtk_widget_show (message_dialog);
+    g_error_free (err);
+    stat = FALSE;
+  }
+  g_free (contents);
+  return stat;
+}
+
+static void
+saveas_dialog_response (GtkWidget *dialog, gint response, TfeTextView *tv) {
+  GtkTextBuffer *tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tv));
+  GFile *file;
+  GtkWidget *win = gtk_widget_get_ancestor (GTK_WIDGET (tv), GTK_TYPE_WINDOW);
+
+  if (response == GTK_RESPONSE_ACCEPT) {
+    file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+    if (! G_IS_FILE (file))
+      g_warning ("TfeTextView: gtk_file_chooser_get_file returns non GFile.\n");
+    else if (save_file(file, tb, GTK_WINDOW (win))) {
+      if (G_IS_FILE (tv->file))
+        g_object_unref (tv->file);
+      tv->file = file;
+      g_signal_emit (tv, tfe_text_view_signals[CHANGE_FILE], 0);
+    } else
+      g_object_unref (file);
+  }
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+void
+tfe_text_view_save (TfeTextView *tv) {
+  g_return_if_fail (TFE_IS_TEXT_VIEW (tv));
+
+  GtkTextBuffer *tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tv));
+  GtkWidget *win = gtk_widget_get_ancestor (GTK_WIDGET (tv), GTK_TYPE_WINDOW);
+
+  if (! gtk_text_buffer_get_modified (tb))
+    return; /* no need to save it */
+  else if (tv->file == NULL)
+    tfe_text_view_saveas (tv);
+  else if (! G_IS_FILE (tv->file))
+    g_error ("TfeTextView: The pointer tv->file isn't NULL nor GFile.\n");
+  else
+    save_file (tv->file, tb, GTK_WINDOW (win));
+}
+
+void
+tfe_text_view_saveas (TfeTextView *tv) {
+  g_return_if_fail (TFE_IS_TEXT_VIEW (tv));
+
+  GtkWidget *dialog;
+  GtkWidget *win = gtk_widget_get_ancestor (GTK_WIDGET (tv), GTK_TYPE_WINDOW);
+
+  dialog = gtk_file_chooser_dialog_new ("Save file", GTK_WINDOW (win), GTK_FILE_CHOOSER_ACTION_SAVE,
+                                      "Cancel", GTK_RESPONSE_CANCEL,
+                                      "Save", GTK_RESPONSE_ACCEPT,
+                                      NULL);
+  g_signal_connect (dialog, "response", G_CALLBACK (saveas_dialog_response), tv);
+  gtk_widget_show (dialog);
+}
+
+GtkWidget *
+tfe_text_view_new_with_file (GFile *file) {
+  g_return_val_if_fail (G_IS_FILE (file), NULL);
+
+  GtkWidget *tv;
+  GtkTextBuffer *tb;
+  char *contents;
+  gsize length;
+
+  if (! g_file_load_contents (file, NULL, &contents, &length, NULL, NULL)) /* read error */
+    return NULL;
+
+  if ((tv = tfe_text_view_new()) != NULL) {
+    tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tv));
+    gtk_text_buffer_set_text (tb, contents, length);
+    TFE_TEXT_VIEW (tv)->file = g_file_dup (file);
+    gtk_text_buffer_set_modified (tb, FALSE);
+  }
+  g_free (contents);
+  return tv;
+}
+
+static void
+open_dialog_response(GtkWidget *dialog, gint response, TfeTextView *tv) {
+  GtkTextBuffer *tb = gtk_text_view_get_buffer (GTK_TEXT_VIEW (tv));
+  GFile *file;
+  char *contents;
+  gsize length;
+  GtkWidget *message_dialog;
+  GError *err = NULL;
+
+  if (response != GTK_RESPONSE_ACCEPT)
+    g_signal_emit (tv, tfe_text_view_signals[OPEN_RESPONSE], 0, TFE_OPEN_RESPONSE_CANCEL);
+  else if (! G_IS_FILE (file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog)))) {
+    g_warning ("TfeTextView: gtk_file_chooser_get_file returns non GFile.\n");
+    g_signal_emit (tv, tfe_text_view_signals[OPEN_RESPONSE], 0, TFE_OPEN_RESPONSE_ERROR);
+  } else if (! g_file_load_contents (file, NULL, &contents, &length, NULL, &err)) { /* read error */
+    g_object_unref (file);
+    message_dialog = gtk_message_dialog_new (GTK_WINDOW (dialog), GTK_DIALOG_MODAL,
+                                             GTK_MESSAGE_ERROR, GTK_BUTTONS_CLOSE,
+                                            "%s.\n", err->message);
+    g_signal_connect (message_dialog, "response", G_CALLBACK (gtk_window_destroy), NULL);
+    gtk_widget_show (message_dialog);
+    g_error_free (err);
+    g_signal_emit (tv, tfe_text_view_signals[OPEN_RESPONSE], 0, TFE_OPEN_RESPONSE_ERROR);
+  } else {
+    gtk_text_buffer_set_text (tb, contents, length);
+    g_free (contents);
+    if (G_IS_FILE (tv->file))
+      g_object_unref (tv->file);
+    tv->file = file;
+    gtk_text_buffer_set_modified (tb, FALSE);
+    g_signal_emit (tv, tfe_text_view_signals[OPEN_RESPONSE], 0, TFE_OPEN_RESPONSE_SUCCESS);
+    g_signal_emit (tv, tfe_text_view_signals[CHANGE_FILE], 0);
+  }
+  gtk_window_destroy (GTK_WINDOW (dialog));
+}
+
+void
+tfe_text_view_open (TfeTextView *tv, GtkWindow *win) {
+  g_return_if_fail (TFE_IS_TEXT_VIEW (tv));
+  g_return_if_fail (GTK_IS_WINDOW (win));
+
+  GtkWidget *dialog;
+
+  dialog = gtk_file_chooser_dialog_new ("Open file", win, GTK_FILE_CHOOSER_ACTION_OPEN,
+                                        "Cancel", GTK_RESPONSE_CANCEL,
+                                        "Open", GTK_RESPONSE_ACCEPT,
+                                        NULL);
+  g_signal_connect (dialog, "response", G_CALLBACK (open_dialog_response), tv);
+  gtk_widget_show (dialog);
+}
+
+GtkWidget *
+tfe_text_view_new (void) {
+  return GTK_WIDGET (g_object_new (TFE_TYPE_TEXT_VIEW, NULL));
+}
+\end{lstlisting}
+
+\hypertarget{total-number-of-lines-words-and-characters}{%
+\subsection{Total number of lines, words and
+characters}\label{total-number-of-lines-words-and-characters}}
+
+\begin{lstlisting}
+$ LANG=C wc tfe5/meson.build tfe5/tfeapplication.c tfe5/tfe.gresource.xml tfe5/tfe.h tfe5/tfenotebook.c tfe5/tfenotebook.h tfetextview/tfetextview.c tfetextview/tfetextview.h tfe5/tfe.ui
+   10    17   294 tfe5/meson.build
+   99   304  3205 tfe5/tfeapplication.c
+    6     9   153 tfe5/tfe.gresource.xml
+    4     6    87 tfe5/tfe.h
+  140   378  3601 tfe5/tfenotebook.c
+   15    21   241 tfe5/tfenotebook.h
+  229   671  8017 tfetextview/tfetextview.c
+   35    60   701 tfetextview/tfetextview.h
+   61   100  2073 tfe5/tfe.ui
+  599  1566 18372 total
+\end{lstlisting}

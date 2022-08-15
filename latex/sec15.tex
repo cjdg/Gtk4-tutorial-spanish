@@ -1,0 +1,431 @@
+\hypertarget{tfeapplication.c}{%
+\section{tfeapplication.c}\label{tfeapplication.c}}
+
+\passthrough{\lstinline!tfeapplication.c!} includes all the code other
+than \passthrough{\lstinline!tfetxtview.c!} and
+\passthrough{\lstinline!tfenotebook.c!}. It does:
+
+\begin{itemize}
+\tightlist
+\item
+  Application support, mainly handling command line arguments.
+\item
+  Builds widgets using ui file.
+\item
+  Connects button signals and their handlers.
+\item
+  Manages CSS.
+\end{itemize}
+
+\hypertarget{main}{%
+\subsection{main}\label{main}}
+
+The function \passthrough{\lstinline!main!} is the first invoked
+function in C language. It connects the command line given by the user
+and Gtk application.
+
+\begin{lstlisting}[language=C, numbers=left]
+#define APPLICATION_ID "com.github.ToshioCP.tfe"
+
+int
+main (int argc, char **argv) {
+  GtkApplication *app;
+  int stat;
+
+  app = gtk_application_new (APPLICATION_ID, G_APPLICATION_HANDLES_OPEN);
+
+  g_signal_connect (app, "startup", G_CALLBACK (app_startup), NULL);
+  g_signal_connect (app, "activate", G_CALLBACK (app_activate), NULL);
+  g_signal_connect (app, "open", G_CALLBACK (app_open), NULL);
+
+  stat =g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+  return stat;
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  1: Defines the application id. It is easy to find the application id,
+  and better than the id is embedded in
+  \passthrough{\lstinline!gtk\_application\_new!}.
+\item
+  8: Creates GtkApplication object.
+\item
+  10-12: Connects ``startup'', ``activate'' and ``open'' signals to
+  their handlers.
+\item
+  14: Runs the application.
+\item
+  15-16: releases the reference to the application and returns the
+  status.
+\end{itemize}
+
+\hypertarget{startup-signal-handler}{%
+\subsection{startup signal handler}\label{startup-signal-handler}}
+
+Startup signal is emitted just after the GtkApplication instance is
+initialized. What the signal handler needs to do is initialization of
+the application.
+
+\begin{itemize}
+\tightlist
+\item
+  Builds the widgets using ui file.
+\item
+  Connects button signals and their handlers.
+\item
+  Sets CSS.
+\end{itemize}
+
+The handler is as follows.
+
+\begin{lstlisting}[language=C, numbers=left]
+static void
+app_startup (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkBuilder *build;
+  GtkApplicationWindow *win;
+  GtkNotebook *nb;
+  GtkButton *btno;
+  GtkButton *btnn;
+  GtkButton *btns;
+  GtkButton *btnc;
+
+  build = gtk_builder_new_from_resource ("/com/github/ToshioCP/tfe/tfe.ui");
+  win = GTK_APPLICATION_WINDOW (gtk_builder_get_object (build, "win"));
+  nb = GTK_NOTEBOOK (gtk_builder_get_object (build, "nb"));
+  gtk_window_set_application (GTK_WINDOW (win), app);
+  btno = GTK_BUTTON (gtk_builder_get_object (build, "btno"));
+  btnn = GTK_BUTTON (gtk_builder_get_object (build, "btnn"));
+  btns = GTK_BUTTON (gtk_builder_get_object (build, "btns"));
+  btnc = GTK_BUTTON (gtk_builder_get_object (build, "btnc"));
+  g_signal_connect_swapped (btno, "clicked", G_CALLBACK (open_cb), nb);
+  g_signal_connect_swapped (btnn, "clicked", G_CALLBACK (new_cb), nb);
+  g_signal_connect_swapped (btns, "clicked", G_CALLBACK (save_cb), nb);
+  g_signal_connect_swapped (btnc, "clicked", G_CALLBACK (close_cb), nb);
+  g_object_unref(build);
+
+GdkDisplay *display;
+
+  display = gtk_widget_get_display (GTK_WIDGET (win));
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gtk_css_provider_load_from_data (provider, "textview {padding: 10px; font-family: monospace; font-size: 12pt;}", -1);
+  gtk_style_context_add_provider_for_display (display, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  12-15: Builds widgets using ui file (resource). Connects the top-level
+  window and the application with
+  \passthrough{\lstinline!gtk\_window\_set\_application!}.
+\item
+  16-23: Gets buttons and connects their signals and handlers.
+\item
+  24: Releases the reference to GtkBuilder.
+\item
+  26-31: Sets CSS. CSS in Gtk is similar to CSS in HTML. You can set
+  margin, border, padding, color, font and so on with CSS. In this
+  program CSS is in line 30. It sets padding, font-family and font size
+  of GtkTextView.
+\item
+  26-28: GdkDisplay is used to set CSS. CSS will be explained in the
+  next subsection.
+\end{itemize}
+
+\hypertarget{css-in-gtk}{%
+\subsection{CSS in Gtk}\label{css-in-gtk}}
+
+CSS is an abbreviation of Cascading Style Sheet. It is originally used
+with HTML to describe the presentation semantics of a document. You
+might have found that the widgets in Gtk is similar to a window in a
+browser. It implies that CSS can also be applied to Gtk windowing
+system.
+
+\hypertarget{css-nodes-selectors}{%
+\subsubsection{CSS nodes, selectors}\label{css-nodes-selectors}}
+
+The syntax of CSS is as follows.
+
+\begin{lstlisting}
+selector { color: yellow; padding-top: 10px; ...}
+\end{lstlisting}
+
+Every widget has CSS node. For example GtkTextView has
+\passthrough{\lstinline!textview!} node. If you want to set style to
+GtkTextView, substitute ``textview'' for the selector.
+
+\begin{lstlisting}
+textview {color: yellow; ...}
+\end{lstlisting}
+
+Class, ID and some other things can be applied to the selector like Web
+CSS. Refer to \href{https://docs.gtk.org/gtk4/css-overview.html}{Gtk4
+API Reference, CSS in Gtk} for further information.
+
+In line 30, the CSS is a string.
+
+\begin{lstlisting}
+textview {padding: 10px; font-family: monospace; font-size: 12pt;}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  padding is a space between the border and contents. This space makes
+  the textview easier to read.
+\item
+  font-family is a name of font. ``monospace'' is one of the generic
+  family font keywords.
+\item
+  font-size is set to 12pt.
+\end{itemize}
+
+\hypertarget{gtkstylecontext-gtkcssprovider-and-gdkdisplay}{%
+\subsubsection{GtkStyleContext, GtkCSSProvider and
+GdkDisplay}\label{gtkstylecontext-gtkcssprovider-and-gdkdisplay}}
+
+GtkStyleContext is an object that stores styling information affecting a
+widget. Each widget is connected to the corresponding GtkStyleContext.
+You can get the context by
+\passthrough{\lstinline!gtk\_widget\_get\_style\_context!}.
+
+GtkCssProvider is an object which parses CSS in order to style widgets.
+
+To apply your CSS to widgets, you need to add GtkStyleProvider (the
+interface of GtkCSSProvider) to GtkStyleContext. However, instead, you
+can add it to GdkDisplay of the window (usually top-level window).
+
+Look at the source file of \passthrough{\lstinline!startup!} handler
+again.
+
+\begin{itemize}
+\tightlist
+\item
+  28: The display is obtained by
+  \passthrough{\lstinline!gtk\_widget\_get\_display!}.
+\item
+  29: Creates a GtkCssProvider instance.
+\item
+  30: Puts the CSS into the provider.
+\item
+  31: Adds the provider to the display. The last argument of
+  \passthrough{\lstinline!gtk\_style\_context\_add\_provider\_for\_display!}
+  is the priority of the style provider.
+  \passthrough{\lstinline!GTK\_STYLE\_PROVIDER\_PRIORITY\_APPLICATION!}
+  is a priority for application-specific style information.
+  \passthrough{\lstinline!GTK\_STYLE\_PROVIDER\_PRIORITY\_USER!} is also
+  often used and it is the highest priority. So,
+  \passthrough{\lstinline!GTK\_STYLE\_PROVIDER\_PRIORITY\_USER!} is
+  often used to a specific widget.
+\end{itemize}
+
+It is possible to add the provider to the context of GtkTextView instead
+of GdkDiplay. To do so, rewrite
+\passthrough{\lstinline!tfe\_text\_view\_new!}. First, get the
+GtkStyleContext object of a TfeTextView object. Then adds the CSS
+provider to the context.
+
+\begin{lstlisting}[language=C]
+GtkWidget *
+tfe_text_view_new (void) {
+  GtkWidget *tv;
+
+  tv = gtk_widget_new (TFE_TYPE_TEXT_VIEW, NULL);
+
+  GtkStyleContext *context;
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (tv));
+  GtkCssProvider *provider = gtk_css_provider_new ();
+  gtk_css_provider_load_from_data (provider, "textview {padding: 10px; font-family: monospace; font-size: 12pt;}", -1);
+  gtk_style_context_add_provider (context, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_USER);
+
+  return tv;
+}
+\end{lstlisting}
+
+CSS in the context takes precedence over CSS in the display.
+
+\hypertarget{activate-and-open-handler}{%
+\subsection{activate and open handler}\label{activate-and-open-handler}}
+
+The handler of ``activate'' and ``open'' signal are
+\passthrough{\lstinline!app\_activate!} and
+\passthrough{\lstinline!app\_open!} respectively. They just create a new
+GtkNotebookPage.
+
+\begin{lstlisting}[language=C, numbers=left]
+static void
+app_activate (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+  GtkWidget *boxv = gtk_window_get_child (GTK_WINDOW (win));
+  GtkNotebook *nb = GTK_NOTEBOOK (gtk_widget_get_last_child (boxv));
+
+  notebook_page_new (nb);
+  gtk_widget_show (GTK_WIDGET (win));
+}
+
+static void
+app_open (GApplication *application, GFile ** files, gint n_files, const gchar *hint) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+  GtkWidget *boxv = gtk_window_get_child (GTK_WINDOW (win));
+  GtkNotebook *nb = GTK_NOTEBOOK (gtk_widget_get_last_child (boxv));
+  int i;
+
+  for (i = 0; i < n_files; i++)
+    notebook_page_new_with_file (nb, files[i]);
+  if (gtk_notebook_get_n_pages (nb) == 0)
+    notebook_page_new (nb);
+  gtk_widget_show (win);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  1-10: \passthrough{\lstinline!app\_activate!}.
+\item
+  8-10: Creates a new page and shows the window.
+\item
+  12-25: \passthrough{\lstinline!app\_open!}.
+\item
+  20-21: Creates notebook pages with files.
+\item
+  22-23: If no page has created, maybe because of read error, then it
+  creates an empty page.
+\item
+  24: Shows the window.
+\end{itemize}
+
+These codes have become really simple thanks to tfenotebook.c and
+tfetextview.c.
+
+\hypertarget{primary-instance}{%
+\subsection{Primary instance}\label{primary-instance}}
+
+Only one GApplication instance can be run at a time per session. The
+session is a bit difficult concept and also platform-dependent, but
+roughly speaking, it corresponds to a graphical desktop login. When you
+use your PC, you probably login first, then your desktop appears until
+you log off. This is the session.
+
+However, Linux is multi process OS and you can run two or more instances
+of the same application. Isn't it a contradiction?
+
+When first instance is launched, then it registers itself with its
+application ID (for example,
+\passthrough{\lstinline!com.github.ToshioCP.tfe!}). Just after the
+registration, startup signal is emitted, then activate or open signal is
+emitted and the instance's main loop runs. I wrote ``startup signal is
+emitted just after the application instance is initialized'' in the
+prior subsection. More precisely, it is emitted just after the
+registration.
+
+If another instance which has the same application ID is invoked, it
+also tries to register itself. Because this is the second instance, the
+registration of the ID has already done, so it fails. Because of the
+failure startup signal isn't emitted. After that, activate or open
+signal is emitted in the primary instance, not the second instance. The
+primary instance receives the signal and its handler is invoked. On the
+other hand, the second instance doesn't receive the signal and it
+immediately quits.
+
+Try to run two instances in a row.
+
+\begin{lstlisting}
+$ ./_build/tfe &
+[1] 84453
+$ ./build/tfe tfeapplication.c
+$
+\end{lstlisting}
+
+First, the primary instance opens a window. Then, after the second
+instance is run, a new notebook page with the contents of
+\passthrough{\lstinline!tfeapplication.c!} appears in the primary
+instance's window. This is because the open signal is emitted in the
+primary instance. The second instance immediately quits so shell prompt
+soon appears.
+
+\hypertarget{a-series-of-handlers-correspond-to-the-button-signals}{%
+\subsection{a series of handlers correspond to the button
+signals}\label{a-series-of-handlers-correspond-to-the-button-signals}}
+
+\begin{lstlisting}[language=C, numbers=left]
+static void
+open_cb (GtkNotebook *nb) {
+  notebook_page_open (nb);
+}
+
+static void
+new_cb (GtkNotebook *nb) {
+  notebook_page_new (nb);
+}
+
+static void
+save_cb (GtkNotebook *nb) {
+  notebook_page_save (nb);
+}
+
+static void
+close_cb (GtkNotebook *nb) {
+  notebook_page_close (GTK_NOTEBOOK (nb));
+}
+\end{lstlisting}
+
+\passthrough{\lstinline!open\_cb!}, \passthrough{\lstinline!new\_cb!},
+\passthrough{\lstinline!save\_cb!} and
+\passthrough{\lstinline!close\_cb!} just call corresponding notebook
+page functions.
+
+\hypertarget{meson.build}{%
+\subsection{meson.build}\label{meson.build}}
+
+\begin{lstlisting}[numbers=left]
+project('tfe', 'c')
+
+gtkdep = dependency('gtk4')
+
+gnome=import('gnome')
+resources = gnome.compile_resources('resources','tfe.gresource.xml')
+
+sourcefiles=files('tfeapplication.c', 'tfenotebook.c', '../tfetextview/tfetextview.c')
+
+executable('tfe', sourcefiles, resources, dependencies: gtkdep)
+\end{lstlisting}
+
+In this file, just the source file names are modified from the prior
+version.
+
+\hypertarget{source-files}{%
+\subsection{source files}\label{source-files}}
+
+The source files of the text editor \passthrough{\lstinline!tfe!} will
+be shown in the next section.
+
+You can also download the files from the
+\href{https://github.com/ToshioCP/Gtk4-tutorial}{repository}. There are
+two options.
+
+\begin{itemize}
+\tightlist
+\item
+  Use git and clone.
+\item
+  Run your browser and open the
+  \href{https://github.com/ToshioCP/Gtk4-tutorial}{top page}. Then click
+  on ``Code'' button and click ``Download ZIP'' in the popup menu. After
+  that, unzip the archive file.
+\end{itemize}
+
+If you use git, run the terminal and type the following.
+
+\begin{lstlisting}
+$ git clone https://github.com/ToshioCP/Gtk4-tutorial.git
+\end{lstlisting}
+
+The source files are under /src/tfe5 directory.

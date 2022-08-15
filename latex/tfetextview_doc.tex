@@ -1,0 +1,298 @@
+\hypertarget{tfetextview-api-reference}{%
+\section{TfeTextView API reference}\label{tfetextview-api-reference}}
+
+TfeTextView -- Child object of GtkTextView. It holds GFile which the
+contents of GtkTextBuffer correponds to.
+
+\hypertarget{functions}{%
+\subsection{Functions}\label{functions}}
+
+\begin{itemize}
+\tightlist
+\item
+  GFile *tfe\_text\_view\_get\_file ()
+\item
+  void tfe\_text\_view\_open ()
+\item
+  void tfe\_text\_view\_save ()
+\item
+  void tfe\_text\_view\_saveas ()
+\item
+  GtkWidget *tfe\_text\_view\_new\_with\_file ()
+\item
+  GtkWidget *tfe\_text\_view\_new ()
+\end{itemize}
+
+\hypertarget{signals}{%
+\subsection{Signals}\label{signals}}
+
+\begin{itemize}
+\tightlist
+\item
+  void change-file
+\item
+  void open-response
+\end{itemize}
+
+\hypertarget{types-and-values}{%
+\subsection{Types and Values}\label{types-and-values}}
+
+\begin{itemize}
+\tightlist
+\item
+  TfeTextView
+\item
+  TfeTextViewClass
+\item
+  TfeTextViewOpenResponseType
+\end{itemize}
+
+\hypertarget{object-hierarchy}{%
+\subsection{Object Hierarchy}\label{object-hierarchy}}
+
+\begin{lstlisting}
+GObject
++--GInitiallyUnowned
+   +--GtkWidget
+      +--GtkTextView
+         +--TfeTextView
+\end{lstlisting}
+
+\hypertarget{includes}{%
+\subsection{Includes}\label{includes}}
+
+\begin{lstlisting}
+#include <gtk/gtk.h>
+\end{lstlisting}
+
+\hypertarget{description}{%
+\subsection{Description}\label{description}}
+
+TfeTextView holds GFile which the contents of GtkTextBuffer corresponds
+to. File manipulation functions are added to this object.
+
+\hypertarget{functions-1}{%
+\subsection{Functions}\label{functions-1}}
+
+\hypertarget{tfe_text_view_get_file}{%
+\subsubsection{tfe\_text\_view\_get\_file()}\label{tfe_text_view_get_file}}
+
+\begin{lstlisting}
+GFile *
+tfe_text_view_get_file (TfeTextView *tv);
+\end{lstlisting}
+
+Returns the copy of the GFile in the TfeTextView.
+
+Parameters
+
+\begin{itemize}
+\tightlist
+\item
+  tv: a TfeTextView
+\end{itemize}
+
+\hypertarget{tfe_text_view_open}{%
+\subsubsection{tfe\_text\_view\_open()}\label{tfe_text_view_open}}
+
+\begin{lstlisting}
+void
+tfe_text_view_open (TfeTextView *tv, GtkWidget *win);
+\end{lstlisting}
+
+Just shows a GtkFileChooserDialog so that a user can choose a file to
+read. This function doesn't do any I/O operations. They are done by the
+signal handler connected to the \passthrough{\lstinline!response!}
+signal emitted by GtkFileChooserDialog. Therefore the caller can't know
+the I/O status directly from the function. Instead, the status is
+informed by \passthrough{\lstinline!open-response!} signal. The caller
+needs to set a handler to this signal in advance.
+
+parameters
+
+\begin{itemize}
+\tightlist
+\item
+  tv: a TfeTextView
+\item
+  win: the top level window
+\end{itemize}
+
+\hypertarget{tfe_text_view_save}{%
+\subsubsection{tfe\_text\_view\_save()}\label{tfe_text_view_save}}
+
+\begin{lstlisting}
+void
+tfe_text_view_save (TfeTextView *tv);
+\end{lstlisting}
+
+Saves the contents of a TfeTextView to a file. If
+\passthrough{\lstinline!tv!} holds a GFile, it is used. Otherwise, this
+function shows GtkFileChosserDialog so that a user can choose a file to
+save.
+
+Parameters
+
+\begin{itemize}
+\tightlist
+\item
+  tv: a TfeTextView
+\end{itemize}
+
+\hypertarget{tfe_text_view_saveas}{%
+\subsubsection{tfe\_text\_view\_saveas()}\label{tfe_text_view_saveas}}
+
+\begin{lstlisting}
+void
+tfe_text_view_saveas (TfeTextView *tv);
+\end{lstlisting}
+
+Saves the content of a TfeTextView to a file. This function shows
+GtkFileChosserDialog so that a user can choose a file to save.
+
+Parameters
+
+\begin{itemize}
+\tightlist
+\item
+  tv: a TfeTextView
+\end{itemize}
+
+\hypertarget{tfe_text_view_new_with_file}{%
+\subsubsection{tfe\_text\_view\_new\_with\_file()}\label{tfe_text_view_new_with_file}}
+
+\begin{lstlisting}
+GtkWidget *
+tfe_text_view_new_with_file (GFile *file);
+\end{lstlisting}
+
+Creates a new TfeTextView and reads the contents of the
+\passthrough{\lstinline!file!} and set it to the GtkTextBuffer
+corresponds to the newly created TfeTextView. Then returns the
+TfeTextView as GtkWidget. If an error happens, it returns
+\passthrough{\lstinline!NULL!}.
+
+Parameters
+
+\begin{itemize}
+\tightlist
+\item
+  file: a GFile
+\end{itemize}
+
+Returns
+
+\begin{itemize}
+\tightlist
+\item
+  a new TfeTextView.
+\end{itemize}
+
+\hypertarget{tfe_text_view_new}{%
+\subsubsection{tfe\_text\_view\_new()}\label{tfe_text_view_new}}
+
+\begin{lstlisting}
+GtkWidget *
+tfe_text_view_new (void);
+\end{lstlisting}
+
+Creates a new TfeTextView and returns the TfeTextView as GtkWidget. If
+an error happens, it returns \passthrough{\lstinline!NULL!}.
+
+Returns
+
+\begin{itemize}
+\tightlist
+\item
+  a new TfeTextView.
+\end{itemize}
+
+\hypertarget{types-and-values-1}{%
+\subsection{Types and Values}\label{types-and-values-1}}
+
+\hypertarget{tfetextview}{%
+\subsubsection{TfeTextView}\label{tfetextview}}
+
+\begin{lstlisting}
+typedef struct _TfeTextView TfeTextView
+struct _TfeTextView
+{
+  GtkTextView parent;
+  GFile *file;
+};
+\end{lstlisting}
+
+The members of this structure are not allowed to be accessed by any
+outer objects. If you want to obtain a copy of the GFile, use
+\passthrough{\lstinline!tfe\_text\_view\_get\_file!}.
+
+\hypertarget{tfetextviewclass}{%
+\subsubsection{TfeTextViewClass}\label{tfetextviewclass}}
+
+\begin{lstlisting}
+typedef struct {
+  GtkTextViewClass parent_class;
+} TfeTextViewClass;
+\end{lstlisting}
+
+No member is added because TfeTextView is a final type object.
+
+\hypertarget{enum-tfetextviewopenresponsetype}{%
+\subsubsection{enum
+TfeTextViewOpenResponseType}\label{enum-tfetextviewopenresponsetype}}
+
+Predefined values for the response id given by
+\passthrough{\lstinline!open-response!} signal.
+
+Members:
+
+\begin{itemize}
+\tightlist
+\item
+  TFE\_OPEN\_RESPONSE\_SUCCESS: The file is successfully opened.
+\item
+  TFE\_OPEN\_RESPONSE\_CANCEL: Reading file is canceled by the user.
+\item
+  TFE\_OPEN\_RESPONSE\_ERROR: An error happened during the opening or
+  reading process.
+\end{itemize}
+
+\hypertarget{signals-1}{%
+\subsection{Signals}\label{signals-1}}
+
+\hypertarget{change-file}{%
+\subsubsection{change-file}\label{change-file}}
+
+\begin{lstlisting}
+void
+user_function (TfeTextView *tv,
+               gpointer user_data)
+\end{lstlisting}
+
+Emitted when the GFile in the TfeTextView object is changed. The signal
+is emitted when:
+
+\begin{itemize}
+\tightlist
+\item
+  a new file is opened and read
+\item
+  a user choose a file with GtkFileChooserDialog and save the contents.
+\item
+  an error occured during I/O operation, and GFile is removed as a
+  result.
+\end{itemize}
+
+\hypertarget{open-response}{%
+\subsubsection{open-response}\label{open-response}}
+
+\begin{lstlisting}
+void
+user_function (TfeTextView *tv,
+               TfeTextViewOpenResponseType response-id,
+               gpointer user_data)
+\end{lstlisting}
+
+Emitted after the user calls
+\passthrough{\lstinline!tfe\_text\_view\_open!}. This signal informs the
+status of file opening and reading.

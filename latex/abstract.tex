@@ -1,0 +1,73 @@
+\hypertarget{contenido-de-este-repositorio}{%
+\paragraph{Contenido de este
+repositorio}\label{contenido-de-este-repositorio}}
+
+Este tutorial ilustra como escribir programas en C con la biblioteca
+Gtk4 se enfoca en prinpcipiantes, asi que el contenido esta limitado a
+los temas básicos. La tabla de contenido se encuentra al final de esta
+introducción.
+
+\begin{itemize}
+\tightlist
+\item
+  Sección 3 a la 21 describe las bases, con el ejemplo de un editor
+  simple \passthrough{\lstinline!tfe!} (Text File Editor).
+\item
+  Sección 22 a la 25 describe como usar GtkDrawingArea.
+\item
+  Sección 26 a la 29 describe el modelo de lista y la vista lista
+  (GtkListView, GtkGridView y GtkColumnView). también describe
+  GtkExpression.
+\end{itemize}
+
+La última versión original de este tutorial (en inglés) se encuentra en
+\href{https://github.com/ToshioCP/Gtk4-tutorial}{Gtk4-tutorial github
+repository}. Puedes leerlo desde ahí directamente sin tener que
+descargar nada.
+
+\hypertarget{documentaciuxf3n-gtk4}{%
+\paragraph{Documentación Gtk4}\label{documentaciuxf3n-gtk4}}
+
+Lee \href{https://docs.gtk.org/gtk4/index.html}{Gtk API Reference} y and
+\href{https://developer.gnome.org/}{Gnome Developer Documentation
+Website} para mayor información.
+
+Estos sitios son recientes (Agosto 2021) La vieja documentación se
+encuentra en \href{https://developer-old.gnome.org/gtk4/stable/}{Gtk
+Reference Manual} y \href{https://developer-old.gnome.org/}{Gnome
+Developer Center}. El nuevo sitio se encuentra en progreso actualmente,
+asi que a veces tendrás que revisar la vieja version
+
+Si deseas conocer mas acerca de GObject y el sistema de tipos, por favor
+lee \href{https://github.com/ToshioCP/Gobject-tutorial}{GObject
+tutorial}. Los detalles de GObject son fáciles de entender y necesarios
+para escribir programas en Gtk4.
+
+\hypertarget{contribuciuxf3n}{%
+\paragraph{Contribución}\label{contribuciuxf3n}}
+
+Este tutorial se encuentra bajo desarrollo y es inestable. Incluso
+aunque los ejemplos han sido probados en Gtk4 versión 4.0, pueden
+existir algunos errores. Si encuentras algún bug, o errores en el
+tutorial y los ejemplos de C, por favor haznoslo notar. Lo puedes
+publicar en (sitio original en inglés)
+\href{https://github.com/ToshioCP/Gtk4-tutorial/issues}{github issues}.
+También puedes publicar los archivos corregidos como un commit a
+\href{https://github.com/ToshioCP/Gtk4-tutorial/pulls}{pull request}.
+Cuando hagas correcciones, corrige el archivo fuente, que se encuentra
+en la carpeta `src', y ejecuta \passthrough{\lstinline!rake!}para crear
+el archivo de salida. Los archivos GFM dentro de la carpeta `gfm' se
+actualizan de manera automática.
+
+Si tienes alguna duda, puedes publicarlo como un issue dentro del sitio.
+Todas las preguntas son útiles y harán este tutorial mejor.
+
+\hypertarget{como-obtener-una-versiuxf3n-html-o-pdf}{%
+\paragraph{Como obtener una versión HTML o
+PDF}\label{como-obtener-una-versiuxf3n-html-o-pdf}}
+
+Si deseas obtener una versión HTML o PDF, la puedes hacer com
+\passthrough{\lstinline!rake!}, que es una versión en ruby de make.
+Escribe \passthrough{\lstinline!rake html!} para HTML. Escribe
+\passthrough{\lstinline!rake pdf!} para PDF. El apéndice ``Cómo
+construir el Tutorial Gtk4'' describe como hacerlo.

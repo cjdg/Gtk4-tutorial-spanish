@@ -105,55 +105,57 @@
         </div>
       </div>
     </nav>
-<h1 id="how-to-build-gtk4-tutorial">How to build Gtk4 Tutorial</h1>
-<h2 id="quick-start-guide">Quick start guide</h2>
+<h1 id="construir-el-tutorial-de-gtk4">Construir el Tutorial de Gtk4</h1>
+<h2 id="guía-rápida">Guía rápida</h2>
 <ol type="1">
-<li>You need linux operationg system, ruby, rake, pandoc and latex system.</li>
-<li>download this repository and uncompress the file.</li>
-<li>change your current directory to the top directory of the source files.</li>
-<li>type <code>rake html</code> to create html files. The files are created under the <code>docs</code> directory.</li>
-<li>type <code>rake pdf</code> to create pdf a file. The file is created under the <code>latex</code> directory.</li>
+<li>Necesitas el sistema operativo linux, ruby, make, pandoc y latex instalados.</li>
+<li>Descarga este repositorio y descomprime el archivo.</li>
+<li>Cambia al directorio superior de los archivos fuente.</li>
+<li>Escribe <code>rake html</code> para crear archivos html. Los archivos se crearán dentro de la carpeta <code>docs</code>.</li>
+<li>Escribe <code>rake pdf</code>para crear el pdf. El archivo se creará dentro de la carpeta <code>latex</code>.</li>
 </ol>
-<h2 id="prerequisites">Prerequisites</h2>
+<h2 id="prerequisitos">Prerequisitos</h2>
 <ul>
-<li>Linux operationg system. The programs in this repository has been tested on Ubuntu 21.04.</li>
-<li>Download the files in the repository. There are two ways to download.
-<ol type="1">
-<li>Use git. Type <code>git clone https://github.com/ToshioCP/Gtk4-tutorial.git</code> on the command-line.</li>
-<li>Download a zip file. Click on the <code>Code</code> button (green button) on the top page of the repository. Then, click “Download ZIP”.</li>
-</ol></li>
-<li>Ruby and rake.</li>
-<li>Pandoc. It is used to convert markdown to html and/or latex.</li>
-<li>Latex system. Texlive2020 or later version is recommended. It is used to generate the pdf file.</li>
+<li>Sistema operativo Linux Los programas de este repositorio han sido probados en Ubuntu 21.04</li>
+<li>Descarga los archivos en el repositorio. Hay 2 maneras de hacer la descarga.</li>
 </ul>
-<h2 id="github-flavored-markdown">Github flavored markdown</h2>
-<p>When you see <a href="https://github.com/ToshioCP/Gtk4-tutorial">gtk4_tutorial github repository</a>, you’ll find the contents of the <code>Readme.md</code> file. This file is written in markdown language. Markdown files have <code>.md</code> suffix.</p>
-<p>There are several kinds of markdown language. <code>Readme.md</code> uses ‘github flavored markdown’, which is often shortened as GFM. Markdown files in the <code>gfm</code> directory are written in GFM. If you are not familiar with it, refer to the page <a href="https://github.github.com/gfm/">github flavor markdown spec</a>.</p>
-<h2 id="pandocs-markdown">Pandoc’s markdown</h2>
-<p>This tutorial also uses another markdown – ‘pandoc’s markdown’. Pandoc is a converter between markdown, html, latex, word docx and so on. This type of markdown is used to convert markdown to html and/or latex.</p>
-<h2 id="src.md-file">.Src.md file</h2>
-<p>.Src.md file has “.src.md” suffix. The syntax of .src.md file is similar to markdown but it has a special command which isn’t included in markdown syntax. It is @@@ command. The command starts with a line begins with “@@@” and ends with a line “@@@”. For example,</p>
+<ol type="1">
+<li>Usar git. Escribe <code>git clone https://github.com/cjdg/Gtk4-tutorial-spanish.git</code> en la línea de comandos.</li>
+<li>Descargar un archivo zip. Click en el botón <code>Code</code> en la página del repositorio. Después, click en “Download ZIP”.</li>
+</ol>
+<ul>
+<li>Ruby y rake.</li>
+<li>Pandoc. Es usado para convertir archivos markdown a html y/o latex.</li>
+<li>Latex. Textlive2020 o posterior. Se usa para generar el PDF.</li>
+</ul>
+<h2 id="markdown-github">Markdown Github</h2>
+<p>Cuando ves el repositorio del <a href="https://github.com/cjdg/Gtk4-tutorial-spanish">Tutorial Gtk4 en español</a>, verás el contenido del archivo <code>Readme.md</code>. Este archivo está escrito en el lenguake Markdown Los archivos Markdown tienen el sufijo<code>.md</code>.</p>
+<p>Existen muchas versiones de Markdown. <code>Readme.md</code> usa la versión Github de Markdown (GFM). Los archivos Markdown en la carpeta <code>gfm</code> están escritos en GFM. Si no estás familiarizado con la GFM, puedes consultar la documentación en <a href="https://github.github.com/gfm/">github flavor markdown spec</a>.</p>
+<h2 id="markdown-pandoc">Markdown pandoc</h2>
+<p>Este tutorial tambien usa otro tipo de markdown, ‘pandoc’. Pandoc es un convertidor entre markdown, latex, doc, docx, etc. Este tipo de markdown se usa para convertir markdown a html y/o latex.</p>
+<h2 id="archivo-.src.md">Archivo .Src.md</h2>
+<p>Los archivos .Src.md tienen el sufijo “.src.md”. La sintaxis de los archivos .src.md es similar a markdown pero tienen un comando especial que no esta incluido en la sintaxis markdown. Es el comando @@@. Este comando inicia una línea con “@@@” y termina con una linea “@@@”. Por ejemplo,</p>
 <pre><code>@@@include
 tfeapplication.c
 @@@</code></pre>
-<p>There are four types of @@@ command.</p>
+<p>Existen 4 tipos de comando @@@</p>
 <h3 id="include">@@<span class="citation" data-cites="include">@include</span></h3>
-<p>This type of @@@ command starts with a line “@@<span class="citation" data-cites="include">@include</span>”.</p>
+<p>Este tipo inicia con el comando @@@ con una línea “@@<span class="citation" data-cites="include">@include</span>”</p>
 <pre><code>@@@include
 tfeapplication.c
 @@@</code></pre>
-<p>This command replaces itself with the texts read from the C source files surrounded by <code>@@@include</code> and <code>@@@</code>. If a function list follows the filename, only the functions are read.</p>
+<p>Este comando reemplaza el texto con el contenido del archivo C entre los comandos <code>@@@include</code> y <code>@@@</code>. Si la función precede al nombre de archivo, sólo serán importadas las funciones listadas.</p>
 <pre><code>@@@include
 tfeapplication.c main startup
 @@@</code></pre>
-<p>The command above is replaced by the contents of <code>main</code> and <code>startup</code> functions in the file <code>tfeapplication.c</code>.</p>
-<p>Other language’s source files are also possible. The following example shows that the ruby file ‘lib_src2md.rb’ is inserted by the command.</p>
+<p>El comando aqui arriba será reemplazado por las funciones <code>main</code> y <code>startup</code> del archivo <code>tfeapplication.c</code>.</p>
+<p>Otros lenguajes pueden ser importados también El siguiente ejemplo importa el archivo ‘lib_src2md.rb’</p>
 <pre><code>@@@include
 lib_src2md.rb
 @@@</code></pre>
-<p>You can’t specify functions or methods unless the file is C source.</p>
-<p>The inserted text is converted to fence code block. Fence code block begins with <code>~~~</code> and ends with <code>~~~</code>. The contents are displayed verbatim. <code>~~~</code> is look like a fence so the block is called “fence code block”.</p>
-<p>If the target markdown is GFM, then an info string can follow the beginning fence. The following example shows that the @@@ command includes a C source file <code>sample.c</code>.</p>
+<p>No se puede insertar funciones que no sean de C.</p>
+<p>El texto insertado es convertido para delimitar el bloque de código. El delimitador del bloque de código comienza con <code>~~~</code> y termina con <code>~~~</code> Los contenidos son mostrados tal cual. <code>~~~</code> parece una cerca, por lo que el bloque se llama “cerca de bloque de código”</p>
+<p>Si el objetivo markdown es GFM, entonces una cadena de información puede seguir al delimitador inicial. El siguiente ejemplo muestra como el comando @@@ incluye un archivo fuente C llamado <code>sample.c</code></p>
 <pre><code>$ cat src/sample.c
 int
 main (int argc, char **argv) {
@@ -175,20 +177,20 @@ main (int argc, char **argv) {
 }
 ~~~
   ... ...</code></pre>
-<p>Info strings are usually languages like C, ruby, xml and so on. This string is decided with the filename extension.</p>
+<p>Las cadenas de información son usualmente languajes como C, ruby, xml, etc. Esta cadena se procesa con la extensión del archivo.</p>
 <ul>
 <li><code>.c</code> =&gt; C</li>
 <li><code>.rb</code> =&gt; ruby</li>
 <li><code>.xml</code> =&gt; xml</li>
 </ul>
-<p>The supported languages are written in the <code>lang</code> method in <code>lib/lib_src2md.rb</code>.</p>
-<p>A line number will be inserted at the top of each line in the code block. If you don’t want to insert it, give “-N” option to @@<span class="citation" data-cites="include">@include</span> command.</p>
-<p>Options:</p>
+<p>Los lenguajes permitidos estan escritos en el método <code>lang</code> en <code>lib/lib_src2md.rb</code>.</p>
+<p>Los números de línea serán insertados arriba de cada línea en el bloque de código. Si no deseas que se inserten, incluye la opción “-N” al comando @@<span class="citation" data-cites="include">@include</span></p>
+<p>Opciones</p>
 <ul>
-<li><code>-n</code>: Inserts a line number at the top of each line (default).</li>
-<li><code>-N</code>: No line number is inserted.</li>
+<li><code>-n</code>: Inserta un número de línea arriba de cada línea (predeterminado).</li>
+<li><code>-N</code>: No se insertan números de línea.</li>
 </ul>
-<p>The following shows that the line numbers are inserted at the beginning of each line.</p>
+<p>El siguiente ejemplo muestra los números de linea y como son insertados al inicio de cada línea.</p>
 <pre><code>$cat src/sample.src.md
   ... ...
 @@@include
@@ -205,56 +207,56 @@ $ cat gfm/sample.md
 14 }
 ~~~
   ... ...</code></pre>
-<p>If a markdown is an intermediate file to html, another type of info string follows the fence. If @@<span class="citation" data-cites="include">@include</span> command doesn’t have -N option, then the generated markdown is:</p>
+<p>Si un archivo markdown es un intermediario a uno html, otro tipo de información seguirá el delimitador Si el comando @@<span class="citation" data-cites="include">@include</span> no tiene una opción -N, entonces el markdown generado será:</p>
 <pre><code>~~~{.C .numberLines}
 int
 main (int argc, char **argv) {
   ... ...
 }
 ~~~</code></pre>
-<p>The info string <code>.C</code> specifies C language. The info string <code>.numberLines</code> is a class of the pandoc markdown. If the class is given, pandoc generates CSS to insert line numbers to the source code in the html file. That’s why the fence code block in the markdown doesn’t have line numbers, which is different from gfm markdown. If <code>-N</code> option is given, then the info string is <code>{.C}</code> only.</p>
-<p>If a markdown is an intermediate file to latex, the same info string follows the beginning fence.</p>
+<p>La cadena de información <code>.C</code> específica lenguaje C. La cadena de información <code>.numberLines</code> es una clase del markdown pandoc. Si la clase se especifíca, pandoc genera el CSS para insertar los números de líneas al código fuente html. Esa es la razón de usar el delimitador de bloque de código, por que markdown no tiene líneas numeradas, que es diferente del markdown GFM. Si se usa la opción <code>-N</code>, sólo aparecerá la cadena informativa <code>{.C</code>.</p>
+<p>Si un archivo markdown es un intermediario a un archivo latex, la misma cadena sigue al delimitador.</p>
 <pre><code>~~~{.C .numberLines}
 int
 main (int argc, char **argv) {
   ... ...
 }
 ~~~</code></pre>
-<p>Rake uses pandoc with –listings option to convert the markdown to a latex file. The generated latex file uses ‘listings package’ to list source files instead of verbatim environment. The markdown above is converted to the following latex source file.</p>
+<p>Rake usa pandoc con la opción <code>--listings</code>para convertir el markdown a un archivo latex. El archivo generado usa <code>listings package</code> para listar los archivos fuente en vez del entorno inmediato. El markdown generado arriba se convierte al archivo latex siguiente:</p>
 <pre><code>\begin{lstlisting}[language=C, numbers=left]
 int
 main (int argc, char **argv) {
   ... ...
 }
 \end{lstlisting}</code></pre>
-<p>Listing package can color or emphasize keywords, strings, comments and directives. But it doesn’t really analyze the syntax of the language, so the emphasis tokens are limited.</p>
-<p>@@<span class="citation" data-cites="include">@include</span> command has two advantages.</p>
+<p>El listado de paquetes puede colorear o enfátizar palabras clave, cadenas, comentarios y directivas. Pero no analiza la sintaxis del lenguaje, sólo las palabras clave.</p>
+<p>El comando @@<span class="citation" data-cites="include">@include</span> posee 2 ventajas:</p>
 <ol type="1">
-<li>Less typing.</li>
-<li>You don’t need to modify your .src.md file, even if the C source file is modified.</li>
+<li>Escribir menos.</li>
+<li>No necesitas modificar el archivo .Src.md, aun si cambias el archivo fuente C.</li>
 </ol>
 <h3 id="shell">@@<span class="citation" data-cites="shell">@shell</span></h3>
-<p>This type of @@@ command starts with a line begins with “@@<span class="citation" data-cites="shell">@shell</span>”.</p>
+<p>Este tipo de comando @@@ comienza con una línea “@@<span class="citation" data-cites="shell">@shell</span>”:</p>
 <pre><code>@@@shell
 shell command
  ... ...
 @@@</code></pre>
-<p>This command replaces itself with:</p>
+<p>Este comando se reemplaza a si mismo con:</p>
 <ul>
-<li>the shell command</li>
-<li>the standard output from the shell command</li>
+<li>el comando shell</li>
+<li>la salida estándar del comando</li>
 </ul>
-<p>For example,</p>
+<p>Por ejemplo:</p>
 <pre><code>@@@shell
 wc Rakefile
 @@@</code></pre>
-<p>This is converted to:</p>
+<p>Se convierte a:</p>
 <pre><code>~~~
 $ wc Rakefile
 164  475 4971 Rakefile
 ~~~</code></pre>
-<h3 id="if-series">@@<span class="citation" data-cites="if">@if</span> series</h3>
-<p>This type of @@@ command starts with a line begins with “@@<span class="citation" data-cites="if">@if</span>”, and followed by “@@<span class="citation" data-cites="elif">@elif</span>”, “@@<span class="citation" data-cites="else">@else</span>” or “@@<span class="citation" data-cites="end">@end</span>”. This command is similar to “#if”, “#elif”, #else" and “#endif” directives in the C preprocessor. For example,</p>
+<h3 id="series-if">series @@<span class="citation" data-cites="if">@if</span></h3>
+<p>Este tipo de comando @@@ comienza con una linea “@@<span class="citation" data-cites="if">@if</span>”m, y seguida por “@@<span class="citation" data-cites="elif">@elif</span>”, “@@<span class="citation" data-cites="else">@else</span>@” o “@@<span class="citation" data-cites="end">@end</span>”. Es similar a “#if”, “#elif”, “#else” y “#endif” en el preprocesador C. Por ejemplo,</p>
 <pre><code>@@@if gfm
 Refer to  [tfetextview API reference](tfetextview_doc.md)
 @@@elif html
@@ -262,19 +264,19 @@ Refer to  [tfetextview API reference](tfetextview_doc.html)
 @@@elif latex
 Refer to tfetextview API reference in appendix.
 @@@end</code></pre>
-<p><code>@@@if</code> and <code>@@@elif</code> have conditions. They are <code>gfm</code>, <code>html</code> or <code>latex</code> so far.</p>
+<p><code>@@@if</code> y <code>@@@elif</code> poseen condiciones Son <code>gfm</code>, <code>html</code> o <code>latex</code> hasta ahora.</p>
 <ul>
-<li>gfm: if the target is GFM</li>
-<li>html: if the target is html</li>
-<li>latex: if the target is pdf.</li>
+<li>gfm: si el objetivo es GFM</li>
+<li>html: si el objetivo es html</li>
+<li>latex: si el objetivo es pdf.</li>
 </ul>
-<p>Other type of conditions may be available in the future version.</p>
-<p>The code analyzing @@<span class="citation" data-cites="if">@if</span> series command is rather complicated. It is based on the state diagram below.</p>
+<p>Otros condicionales pueden estar disponibles en versiones futuras.</p>
+<p>El analizador de las series @@<span class="citation" data-cites="if">@if</span> es un poco complicado. Esta basado en el diagrama de estados de abajo.</p>
 <figure>
-<img src="image/state_diagram.png" alt="" /><figcaption>state diagram</figcaption>
+<img src="image/state_diagram.png" alt="" /><figcaption>diagrama de estado</figcaption>
 </figure>
 <h3 id="table">@@<span class="citation" data-cites="table">@table</span></h3>
-<p>This type of @@@ command starts with a line begins with “@@<span class="citation" data-cites="table">@table</span>”. The contents of this command is a table of the GFM or pandoc’s markdown. The command makes a table easy to read. For example, a text file <code>sample.md</code> has a table like this:</p>
+<p>Este comando @@@ comienza con una línea “@@<span class="citation" data-cites="table">@table</span>”. El contenido es una tabla en formato GFM o pandoc. El comando crea una table fácil de leer. Por ejemplo, un archivo <code>sample.md</code> posee una tabla de la siguiente manera:</p>
 <pre><code>Price list
 
 @@@table
@@ -283,48 +285,49 @@ Refer to tfetextview API reference in appendix.
 |mouse|$10|
 |PC|$500|
 @@@</code></pre>
-<p>The command changes this into:</p>
+<p>El comando se transforma en lo siguiente:</p>
 <pre><code>Price list
 
 |item |price|
 |:---:|:---:|
 |mouse| $10 |
 | PC  |$500 |</code></pre>
-<p>This command just changes the appearance of the table. There’s no influence on html/latex files that is converted from the markdown. Notice that the command supports only the above type of markdown table format.</p>
-<p>A script <code>mktbl.rb</code> supports this command. If you run the script like this:</p>
+<p>Este comando cambia la apariencia de la tabla. No influye en los archivos html/latex que son convertidos desde markdown. El comando sólo soporta el formato arriba mencionado.</p>
+<p>El script <code>mktbl.rb</code> soporta este comando. Si ejecutas el script:</p>
 <pre><code>$ ruby mktbl.rb sample.md</code></pre>
-<p>Then, the tables in ‘sample.md’ will be arranged. The script also makes a backup file <code>sample.md.bak</code>.</p>
-<p>The task of the script seems easy, but the program is not so simple. The script <code>mktbl.rb</code> uses a library <code>lib/lib_src2md.rb</code></p>
-<p>@@<span class="citation" data-cites="commands">@commands</span> are effective in the whole text. This means you can’t stop the @@<span class="citation" data-cites="commands">@commands</span>. But sometimes you want to show the commands literally like this document. One solution is to add four blanks at the top of the line. Then @@<span class="citation" data-cites="commands">@commands</span> are not effective because @@<span class="citation" data-cites="commands">@commands</span> must be at the top of the line.</p>
-<h2 id="conversion">Conversion</h2>
-<p>The @@@ commands are carried out by a method <code>src2md</code>, which is in the file <code>lib/lib_src2md.rb</code>. This method converts <code>.src.md</code> file into <code>.md</code> file. In addition, some other conversions are made by <code>src2md</code> method.</p>
+<p>Las tablas en ‘sample.md’ serán organizadas El script tambien hace un respaldo <code>sample.md.bak</code></p>
+<p>La tarea del script parece fácil, pero el programa no es tan simple. El script <code>mktbl.rb</code> usa la líbreria <code>lib/lib_src2md.rb</code></p>
+<p>Los comandos @@@ son efectivos en todo el texto. Esto significa que no puedes detenerlos. Pero algunas veces necesitas mostrar los comandos como en este documento. Una solución es agregar 4 espacios al inicio de la línea. Entonces los comandos @@@ no son efectivos por que deben estar al inicio de la línea.</p>
+<h2 id="conversiones">Conversiones</h2>
+<p>Los comandos @@@ son usados por el método <code>src2md</code> el cual se encuentra en el archivo <code>lib/lib_src2md.rb</code> Este método convierte los archivos <code>.src.md</code> en archivos <code>.md</code>. Adicionalmente, otras conversiones son realizadas por el método <code>src2md</code>.</p>
 <ul>
-<li>Relative links are changed according to the change of the base directory.</li>
-<li>Size option in an image link is removed when the destination is GFM or html.</li>
-<li>Relative link is removed except .src.md files when the destination is html.</li>
-<li>Relative link is removed when the destination is latex.</li>
+<li>Los vínculos relativos se sustituyen de acuerdo al cambio en el directorio base.</li>
+<li>La opción de tamaño del link de imagen se elimina cuando el destino es GFM o html.</li>
+<li>Los vínculos relativos se eliminan menos los relativos a .src.md cuando el destino es GFM o html.</li>
+<li>Los vínculos relativos se eliminan cuando el destino es latex.</li>
 </ul>
-<p>The order of the conversions are:</p>
+<p>El orden de las conversiones es:</p>
 <ol type="1">
-<li>@@<span class="citation" data-cites="if">@if</span></li>
+<li>@@<span class="citation" data-cites="if">@if</span>## Src directory and the top directory</li>
 <li>@@<span class="citation" data-cites="table">@table</span></li>
 <li>@@<span class="citation" data-cites="include">@include</span></li>
 <li>@@<span class="citation" data-cites="shell">@shell</span></li>
-<li>others</li>
+<li>otros</li>
 </ol>
-<p>There is the <code>src2md.rb</code> file in the top directory of this repository. It just invokes the method <code>src2md</code>. In the same way, the method is called in the action in the <code>Rakefile</code>.</p>
-<h2 id="directory-structure">Directory structure</h2>
-<p>There are seven directories under <code>gtk4_tutorial</code> directory. They are <code>gfm</code>, <code>docs</code>, <code>latex</code>, <code>src</code>, <code>image</code>, <code>test</code> and <code>lib</code>. Three directories <code>gfm</code>, <code>docs</code> and <code>latex</code> are the destination directories for GFM, html and latex files respectively. It is possible that these three directories don’t exist before the conversion.</p>
+<p>Hay un archivo <code>src2md.rb</code> en el directorio principal. Invoca el método <code>src2md</code>. De la misma forma, el método se ejecuta en la accion del archivo <code>Rakefile</code></p>
+<h2 id="estructura-del-directorio">Estructura del directorio</h2>
+<p>Existen siete directorios dentro del tutorial. Son <code>gfm</code>, <code>docs</code>, <code>latex</code>, <code>src</code>, <code>image</code>, <code>test</code> y <code>lib</code>. Tres directorios: <code>gfm</code>, <code>docs</code> y <code>latex</code> son los destinos para GFM, html y latex. Es posible que estos directorios no existan antes de la conversión.</p>
 <ul>
-<li>src: This directory contains .src.md files and C-related source files.</li>
-<li>image: This directory contains image files like png or jpg.</li>
-<li>gfm: <code>rake</code> converts .src.md files to GFM files and store them in this directory.</li>
-<li>docs: <code>rake html</code> will convert .src.md files to html files and store them in this directory.</li>
-<li>latex: <code>rake pdf</code> will convert .src.md files to latex files and store them in this directory. Finally it creates a pdf file in <code>latex</code> directory.</li>
-<li>lib: This directory includes ruby library files.</li>
-<li>test: This directory contains test files. The tests are carried out by typing <code>rake test</code> on the terminal.</li>
+<li>src: Este directorio contiene los archivos .src.md y los archivos C relacionados.</li>
+<li>image: Este directorio contiene imágenes.</li>
+<li>gfm <code>rake</code> convierte los archivos .src.md a archivos GFM y los guarda en este directorio.</li>
+<li>docs: <code>rake html</code> convertirá los archivos .src.md a html y los guarda en este directorio.</li>
+<li>latex: <code>rake pdf</code> convertirá los archivos .src.md a latex y los guarda en este directorio y crea un pdf en el directorio.</li>
+<li>lib: contiene las líbrerias de ruby.</li>
+<li>test: contiene los archivos de prueba, estos se realizan escribiendo <code>rake test</code> en la terminal.</li>
 </ul>
-<h2 id="src-directory-and-the-top-directory">Src directory and the top directory</h2>
+<h2 id="directorios-src-y-superior.">Directorios Src y superior.</h2>
+<p>El directorio Src contiene los archivos .src.md y los archivo fuente C. El directorio principal, que es gt_tutotial_spanish, contiene los archivos <code>Rakefile</code>, <code>src2md.rb</code> y otros. Cuando el archivo <code>Readme.md</code> es generado, se ubicará en el directorio principal. <code>Readme.md</code> tiene título, resumen, tabla de contenido con enlaces a los archivos GFM.</p>
 <p>Src directory contains .src.md files and C-related source files. The top directory, which is gtk_tutorial directory, contains <code>Rakefile</code>, <code>src2md.rb</code> and some other files. When <code>Readme.md</code> is generated, it will be located at the top directory. <code>Readme.md</code> has title, abstract, table of contents with links to GFM files.</p>
 <p>Rakefile describes how to convert .src.md files into GFM, html and/or pdf files. Rake carries out the conversion according to the <code>Rakefile</code>.</p>
 <h2 id="the-name-of-files-in-src-directory">The name of files in src directory</h2>
