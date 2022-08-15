@@ -1,0 +1,426 @@
+\hypertarget{functions-in-gtknotebook}{%
+\section{Functions in GtkNotebook}\label{functions-in-gtknotebook}}
+
+GtkNotebook is a very important object in the text file editor
+\passthrough{\lstinline!tfe!}. It connects the application and
+TfeTextView objects. A set of public functions are declared in
+\passthrough{\lstinline!tfenotebook.h!}. The word ``tfenotebook'' is
+used only in filenames. There's no ``TfeNotebook'' object.
+
+\begin{lstlisting}[language=C, numbers=left]
+void
+notebook_page_save(GtkNotebook *nb);
+
+void
+notebook_page_close (GtkNotebook *nb);
+
+void
+notebook_page_open (GtkNotebook *nb);
+
+void
+notebook_page_new_with_file (GtkNotebook *nb, GFile *file);
+
+void
+notebook_page_new (GtkNotebook *nb);
+\end{lstlisting}
+
+This header file describes the public functions in
+\passthrough{\lstinline!tfenotebook.c!}.
+
+\begin{itemize}
+\tightlist
+\item
+  1-2: \passthrough{\lstinline!notebook\_page\_save!} saves the current
+  page to the file of which the name specified in the tab. If the name
+  is \passthrough{\lstinline!untitled!} or
+  \passthrough{\lstinline!untitled!} followed by digits,
+  FileChooserDialog appears and a user can choose or specify a filename.
+\item
+  4-5: \passthrough{\lstinline!notebook\_page\_close!} closes the
+  current page.
+\item
+  7-8: \passthrough{\lstinline!notebook\_page\_open!} shows a file
+  chooser dialog and a user can choose a file. The file is inserted to a
+  new page.
+\item
+  10-11: \passthrough{\lstinline!notebook\_page\_new\_with\_file!}
+  creates a new page and the file given as an argument is read and
+  inserted into the page.
+\item
+  13-14: \passthrough{\lstinline!notebook\_page\_new!} creates a new
+  empty page.
+\end{itemize}
+
+You probably find that the functions except
+\passthrough{\lstinline!notebook\_page\_close!} are higher level
+functions of
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!tfe\_text\_view\_save!}
+\item
+  \passthrough{\lstinline!tef\_text\_view\_open!}
+\item
+  \passthrough{\lstinline!tfe\_text\_view\_new\_with\_file!}
+\item
+  \passthrough{\lstinline!tfe\_text\_view\_new!}
+\end{itemize}
+
+respectively.
+
+There are two layers. One of them is
+\passthrough{\lstinline!tfe\_text\_view ...!}, which is the lower level
+layer. The other is \passthrough{\lstinline!note\_book ...!}, which is
+the higher level layer.
+
+Now let's look at the program of each function.
+
+\hypertarget{notebook_page_new}{%
+\subsection{notebook\_page\_new}\label{notebook_page_new}}
+
+\begin{lstlisting}[language=C, numbers=left]
+static gchar*
+get_untitled () {
+  static int c = -1;
+  if (++c == 0) 
+    return g_strdup_printf("Untitled");
+  else
+    return g_strdup_printf ("Untitled%u", c);
+}
+
+static void
+notebook_page_build (GtkNotebook *nb, GtkWidget *tv, char *filename) {
+  GtkWidget *scr = gtk_scrolled_window_new ();
+  GtkNotebookPage *nbp;
+  GtkWidget *lab;
+  int i;
+
+  gtk_text_view_set_wrap_mode (GTK_TEXT_VIEW (tv), GTK_WRAP_WORD_CHAR);
+  gtk_scrolled_window_set_child (GTK_SCROLLED_WINDOW (scr), tv);
+  lab = gtk_label_new (filename);
+  i = gtk_notebook_append_page (nb, scr, lab);
+  nbp = gtk_notebook_get_page (nb, scr);
+  g_object_set (nbp, "tab-expand", TRUE, NULL);
+  gtk_notebook_set_current_page (nb, i);
+  g_signal_connect (GTK_TEXT_VIEW (tv), "change-file", G_CALLBACK (file_changed_cb), nb);
+}
+
+void
+notebook_page_new (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *tv;
+  char *filename;
+
+  if ((tv = tfe_text_view_new ()) == NULL)
+    return;
+  filename = get_untitled ();
+  notebook_page_build (nb, tv, filename);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  27-38: \passthrough{\lstinline!notebook\_page\_new!} function.
+\item
+  29: \passthrough{\lstinline!g\_return\_if\_fail!} is used to check the
+  argument.
+\item
+  34: Creates TfeTextView object. If it fails, it returns to the caller.
+\item
+  36: Creates filename, which is ``Untitled'', ``Untitled1'', \ldots{} .
+\item
+  1-8: \passthrough{\lstinline!get\_untitled!} function.
+\item
+  3: Static variable \passthrough{\lstinline!c!} is initialized at the
+  first call of this function. After that \passthrough{\lstinline!c!}
+  keeps its value unless it is changed explicitly.
+\item
+  4-7: Increases \passthrough{\lstinline!c!} by one and if it is zero
+  then it returns ``Untitled''. If it is a positive integer then it
+  returns ``Untitled\textless the integer\textgreater{}'', for example,
+  ``Untitled1'', ``Untitled2'', and so on. The function
+  \passthrough{\lstinline!g\_strdup\_printf!} creates a string and it
+  should be freed by \passthrough{\lstinline!g\_free!} when it becomes
+  useless. The caller of \passthrough{\lstinline!get\_untitled!} is in
+  charge of freeing the string.
+\item
+  37: calls \passthrough{\lstinline!notebook\_page\_build!} to build the
+  contents of the page.
+\item
+  10- 25: \passthrough{\lstinline!notebook\_page\_build!} function.
+\item
+  12: Creates GtkScrolledWindow.
+\item
+  17: Sets the wrap mode of \passthrough{\lstinline!tv!} to
+  GTK\_WRAP\_WORD\_CHAR so that lines are broken between words or
+  graphemes.
+\item
+  18: Inserts \passthrough{\lstinline!tv!} to GtkscrolledWindow as a
+  child.
+\item
+  19-20: Creates GtkLabel, then appends \passthrough{\lstinline!scr!}
+  and \passthrough{\lstinline!lab!} to the GtkNotebook instance
+  \passthrough{\lstinline!nb!}.
+\item
+  21-22: Sets ``tab-expand'' property to TRUE. The function
+  \passthrough{\lstinline!g\_object\_set!} sets properties on an object.
+  The object is any object derived from GObject. In many cases, an
+  object has its own function to set its properties, but sometimes not.
+  In that case, use \passthrough{\lstinline!g\_object\_set!} to set the
+  property.
+\item
+  23: Sets the current page of \passthrough{\lstinline!nb!} to the newly
+  created page.
+\item
+  24: Connects ``change-file'' signal and
+  \passthrough{\lstinline!file\_changed\_cb!} handler.
+\end{itemize}
+
+\hypertarget{notebook_page_new_with_file}{%
+\subsection{notebook\_page\_new\_with\_file}\label{notebook_page_new_with_file}}
+
+\begin{lstlisting}[language=C, numbers=left]
+void
+notebook_page_new_with_file (GtkNotebook *nb, GFile *file) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+  g_return_if_fail(G_IS_FILE (file));
+
+  GtkWidget *tv;
+  char *filename;
+
+  if ((tv = tfe_text_view_new_with_file (file)) == NULL)
+    return; /* read error */
+  filename = g_file_get_basename (file);
+  notebook_page_build (nb, tv, filename);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  9-10: Calls
+  \passthrough{\lstinline!tfe\_text\_view\_new\_with\_file!}. If the
+  function returns NULL, an error has happend. Then, it does nothing and
+  returns.
+\item
+  11-12: Gets the filename and builds the contents of the page.
+\end{itemize}
+
+\hypertarget{notebook_page_open}{%
+\subsection{notebook\_page\_open}\label{notebook_page_open}}
+
+\begin{lstlisting}[language=C, numbers=left]
+static void
+open_response (TfeTextView *tv, int response, GtkNotebook *nb) {
+  GFile *file;
+  char *filename;
+
+  if (response != TFE_OPEN_RESPONSE_SUCCESS || ! G_IS_FILE (file = tfe_text_view_get_file (tv))) {
+    g_object_ref_sink (tv);
+    g_object_unref (tv);
+  }else {
+    filename = g_file_get_basename (file);
+    g_object_unref (file);
+    notebook_page_build (nb, GTK_WIDGET (tv), filename);
+  }
+}
+
+void
+notebook_page_open (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *tv;
+
+  if ((tv = tfe_text_view_new ()) == NULL)
+    return;
+  g_signal_connect (TFE_TEXT_VIEW (tv), "open-response", G_CALLBACK (open_response), nb);
+  tfe_text_view_open (TFE_TEXT_VIEW (tv), GTK_WINDOW (gtk_widget_get_ancestor (GTK_WIDGET (nb), GTK_TYPE_WINDOW)));
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  16-26: \passthrough{\lstinline!notebook\_page\_open!} function.
+\item
+  22-23: Creates TfeTextView object. If NULL is returned, an error has
+  happened. Then, it returns to the caller.
+\item
+  24: Connects the signal ``open-response'' and the handler
+  \passthrough{\lstinline!open\_response!}.
+\item
+  25: Calls \passthrough{\lstinline!tfe\_text\_view\_open!}. The
+  ``open-response'' signal will be emitted later to inform the result of
+  opening and reading a file.
+\item
+  1-14: \passthrough{\lstinline!open\_response!} handler.
+\item
+  6-8: If the response code is NOT
+  \passthrough{\lstinline!TFE\_OPEN\_RESPONSE\_SUCCESS!} or
+  \passthrough{\lstinline!tfe\_text\_view\_get\_file!} doesn't return
+  the pointer to a GFile, it has failed to open and read a new file.
+  Then, what \passthrough{\lstinline!notebook\_page\_open!} did in
+  advance need to be canceled. The instance \passthrough{\lstinline!tv!}
+  hasn't been a child widget of GtkScrolledWindow yet. Such instance has
+  floating reference. Floating reference will be explained later in this
+  subsection. You need to call
+  \passthrough{\lstinline!g\_object\_ref\_sink!} first. Then the
+  floating reference is converted into an ordinary reference. Now you
+  call \passthrough{\lstinline!g\_object\_unref!} to decrease the
+  reference count by one.
+\item
+  9-13: Otherwise, everything is okay. Gets the filename, builds the
+  contents of the page.
+\end{itemize}
+
+All the widgets are derived from GInitiallyUnowned. When an instance of
+GInitiallyUnowned or its descendant is created, the instance has a
+floating reference. The function
+\passthrough{\lstinline!g\_object\_ref\_sink!} converts the floating
+reference into an ordinary reference. If the instance doesn't have a
+floating reference, \passthrough{\lstinline!g\_object\_ref\_sink!}
+simply increases the reference count by one. On the other hand, when an
+instance of GObject (not GInitiallyUnowned) is created, no floating
+reference is given. And the instance has a normal reference count
+instead of floating reference.
+
+If you use \passthrough{\lstinline!g\_object\_unref!} to an instance
+that has a floating reference, you need to convert the floating
+reference to a normal reference in advance. See
+\href{https://developer-old.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html\#gobject-The-Base-Object-Type.description}{GObject
+Reference Manual} for further information.
+
+\hypertarget{notebook_page_close}{%
+\subsection{notebook\_page\_close}\label{notebook_page_close}}
+
+\begin{lstlisting}[language=C, numbers=left]
+void
+notebook_page_close (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  GtkWidget *win;
+  int i;
+
+  if (gtk_notebook_get_n_pages (nb) == 1) {
+    win = gtk_widget_get_ancestor (GTK_WIDGET (nb), GTK_TYPE_WINDOW);
+    gtk_window_destroy(GTK_WINDOW (win));
+  } else {
+    i = gtk_notebook_get_current_page (nb);
+    gtk_notebook_remove_page (GTK_NOTEBOOK (nb), i);
+  }
+}
+\end{lstlisting}
+
+This function closes the current page. If the page is the only page the
+notebook has, then the function destroys the top-level window and quits
+the application.
+
+\begin{itemize}
+\tightlist
+\item
+  8-10: If the page is the only page the notebook has, it calls
+  \passthrough{\lstinline!gtk\_window\_destroy!} to destroys the
+  top-level window.
+\item
+  11-13: Otherwise, removes the current page.
+\end{itemize}
+
+\hypertarget{notebook_page_save}{%
+\subsection{notebook\_page\_save}\label{notebook_page_save}}
+
+\begin{lstlisting}[language=C, numbers=left]
+static TfeTextView *
+get_current_textview (GtkNotebook *nb) {
+  int i;
+  GtkWidget *scr;
+  GtkWidget *tv;
+
+  i = gtk_notebook_get_current_page (nb);
+  scr = gtk_notebook_get_nth_page (nb, i);
+  tv = gtk_scrolled_window_get_child (GTK_SCROLLED_WINDOW (scr));
+  return TFE_TEXT_VIEW (tv);
+}
+
+void
+notebook_page_save (GtkNotebook *nb) {
+  g_return_if_fail(GTK_IS_NOTEBOOK (nb));
+
+  TfeTextView *tv;
+
+  tv = get_current_textview (nb);
+  tfe_text_view_save (TFE_TEXT_VIEW (tv));
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  13-21: \passthrough{\lstinline!notebook\_page\_save!}.
+\item
+  19: Gets TfeTextView belongs to the current page.
+\item
+  20: Calls \passthrough{\lstinline!tfe\_text\_view\_save!}.
+\item
+  1-11: \passthrough{\lstinline!get\_current\_textview!}. This function
+  gets the TfeTextView object belongs to the current page.
+\item
+  7: Gets the page number of the current page.
+\item
+  8: Gets the child widget \passthrough{\lstinline!scr!}, which is a
+  GtkScrolledWindow instance, of the current page.
+\item
+  9-10: Gets the child widget of \passthrough{\lstinline!scr!}, which is
+  a TfeTextView instance, and returns it.
+\end{itemize}
+
+\hypertarget{file_changed_cb-handler}{%
+\subsection{file\_changed\_cb handler}\label{file_changed_cb-handler}}
+
+The function \passthrough{\lstinline!file\_changed\_cb!} is a handler
+connected to ``change-file'' signal. If a file in a TfeTextView instance
+is changed, it emits this signal. This handler changes the label of
+GtkNotebookPage.
+
+\begin{lstlisting}[language=C, numbers=left]
+static void
+file_changed_cb (TfeTextView *tv, GtkNotebook *nb) {
+  GtkWidget *scr;
+  GtkWidget *label;
+  GFile *file;
+  char *filename;
+
+  file = tfe_text_view_get_file (tv);
+  scr = gtk_widget_get_parent (GTK_WIDGET (tv));
+  if (G_IS_FILE (file)) {
+    filename = g_file_get_basename (file);
+    g_object_unref (file);
+  } else
+    filename = get_untitled ();
+  label = gtk_label_new (filename);
+  g_free (filename);
+  gtk_notebook_set_tab_label (nb, scr, label);
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  8: Gets the GFile instance from \passthrough{\lstinline!tv!}.
+\item
+  9: Gets the GkScrolledWindow instance which is the parent widget of
+  \passthrough{\lstinline!tv!}.
+\item
+  10-12: If \passthrough{\lstinline!file!} points GFile, then assigns
+  the filename of the GFile into \passthrough{\lstinline!filename!}.
+  Then, unref the GFile object \passthrough{\lstinline!file!}.
+\item
+  13-14: Otherwise (file is NULL), assigns untitled string to
+  \passthrough{\lstinline!filename!}.
+\item
+  15-16: Creates a GtkLabel instance \passthrough{\lstinline!label!}
+  with the filename and set the label of the GtkNotebookPage with
+  \passthrough{\lstinline!label!}.
+\end{itemize}

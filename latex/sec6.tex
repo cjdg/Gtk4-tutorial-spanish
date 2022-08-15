@@ -1,0 +1,281 @@
+\hypertarget{string-and-memory-management}{%
+\section{String and memory
+management}\label{string-and-memory-management}}
+
+GtkTextView and GtkTextBuffer have functions that use string parameters
+or return a string. The knowledge of strings and memory management is
+useful to understand how to use these functions.
+
+\hypertarget{string-and-memory}{%
+\subsection{String and memory}\label{string-and-memory}}
+
+A String is an array of characters that is terminated with
+`\textbackslash0'. Strings are not a C type such as char, int, float or
+double, but exist as a pointer to a character array. They behaves like a
+string type which you may be familiar from other languages. So, this
+pointer is often called `a string'.
+
+In the following, \passthrough{\lstinline!a!} and
+\passthrough{\lstinline!b!} defined as character arrays, and are
+strings.
+
+\begin{lstlisting}[language=C]
+char a[10], *b;
+
+a[0] = 'H';
+a[1] = 'e';
+a[2] = 'l';
+a[3] = 'l';
+a[4] = 'o';
+a[5] = '\0';
+
+b = a;
+/* *b is 'H' */
+/* *(++b) is 'e' */
+\end{lstlisting}
+
+The array \passthrough{\lstinline!a!} has \passthrough{\lstinline!char!}
+elements and the size of ten. The first six elements are `H', `e', `l',
+`l', `o' and `\textbackslash0'. This array represents the string
+``Hello''. The first five elements are character codes that correspond
+to the characters. The sixth element is `\textbackslash0', which is the
+same as zero, and indicates that the string ends there. The size of the
+array is 10, so 4 bytes aren't used, but that's OK, they are just
+ignored.
+
+The variable `b' is a pointer to a character. Because
+\passthrough{\lstinline!b!} is assigned to be
+\passthrough{\lstinline!a!}, \passthrough{\lstinline!a!} and
+\passthrough{\lstinline!b!} point the same character (`H'). The variable
+\passthrough{\lstinline!a!} is defined as an array and it can't be
+changed. It always point the top address of the array. On the other
+hand, `b' is a pointer, which is mutable, so \passthrough{\lstinline!b!}
+can be change. It is then possible to write statements like
+\passthrough{\lstinline!++b!}, which means take the value in b (n
+address), increase it by one, and store that back in
+\passthrough{\lstinline!b!}.
+
+If a pointer is NULL, it points to nothing. So, the pointer is not a
+string. A NULL string on the other hand will be a pointer which points
+to a location that contains \passthrough{\lstinline!\\0!}, which is a
+string of length 0 (or ""). Programs that use strings will include bugs
+if you aren't careful when using NULL pointers.
+
+Another annoying problem is the memory that a string is allocated. There
+are four cases:
+
+\begin{itemize}
+\tightlist
+\item
+  The string is read only;
+\item
+  The string is in static memory area;
+\item
+  The string is in stack; and
+\item
+  The string is in memory allocated from the heap area.
+\end{itemize}
+
+\hypertarget{read-only-string}{%
+\subsection{Read only string}\label{read-only-string}}
+
+A string literal in a C program is surrounded by double quotes and
+written as the following:
+
+\begin{lstlisting}[language=C]
+char *s;
+s = "Hello"
+\end{lstlisting}
+
+``Hello'' is a string literal, and is stored in program memory. A string
+literal is read only. In the program above, \passthrough{\lstinline!s!}
+points the string literal.
+
+So, the following program is illegal.
+
+\begin{lstlisting}[language=C]
+*(s+1) = 'a';
+\end{lstlisting}
+
+The result is undefined. Probably a bad thing will happen, for example,
+a segmentation fault.
+
+NOTE: The memory of the literal string is allocated when the program is
+compiled. It is possible to view all the literal strings defined in your
+program by using the \passthrough{\lstinline!string!} command.
+
+\hypertarget{strings-defined-as-arrays}{%
+\subsection{Strings defined as arrays}\label{strings-defined-as-arrays}}
+
+If a string is defined as an array, it's in either stored in the static
+memory area or stack. This depends on the class of the array. If the
+array's class is \passthrough{\lstinline!static!}, then it's placed in
+static memory area. This allocation and memory address is fixed for the
+life of the program. This area can be changed and is writable.
+
+If the array's class is \passthrough{\lstinline!auto!}, then it's placed
+in stack. If the array is defined inside a function, its default class
+is \passthrough{\lstinline!auto!}. The stack area will disappear when
+the function exits and returns to the caller. Arrays defined on the
+stack are writable.
+
+\begin{lstlisting}[language=C]
+static char a[] = {'H', 'e', 'l', 'l', 'o', '\0'};
+
+void
+print_strings (void) {
+  char b[] = "Hello";
+
+  a[1] = 'a'; /* Because the array is static, it's writable. */
+  b[1] = 'a'; /* Because the array is auto, it's writable. */
+
+  printf ("%s\n", a); /* Hallo */
+  printf ("%s\n", b); /* Hallo */
+}
+\end{lstlisting}
+
+The array \passthrough{\lstinline!a!} is defined externally to a
+function and is global in its scope. Such variables are placed in static
+memory area even if the \passthrough{\lstinline!static!} class is left
+out. The compiler calculates the number of the elements in the right
+hand side (six), and then creates code that allocates six bytes in the
+static memory area and copies the data to this memory.
+
+The array \passthrough{\lstinline!b!} is defined inside the function so
+its class is \passthrough{\lstinline!auto!}. The compiler calculates the
+number of the elements in the string literal. It has six elements as the
+zero termination character is also included. The compiler creates code
+which allocates six bytes memory in the stack and copies the data to the
+memory.
+
+Both \passthrough{\lstinline!a!} and \passthrough{\lstinline!b!} are
+writable.
+
+The memory is managed by the executable program. You don't need your
+program to allocate or free the memory for \passthrough{\lstinline!a!}
+and \passthrough{\lstinline!b!}. The array \passthrough{\lstinline!a!}
+is created then the program is first run and remains for the life of the
+program. The array \passthrough{\lstinline!b!} is created on the stack
+then the function is called, disappears when the function returns.
+
+\hypertarget{strings-in-the-heap-area}{%
+\subsection{Strings in the heap area}\label{strings-in-the-heap-area}}
+
+You can also get, use and release memory from the heap area. The
+standard C library provides \passthrough{\lstinline!malloc!} to get
+memory and \passthrough{\lstinline!free!} to put back memory. GLib
+provides the functions \passthrough{\lstinline!g\_new!} and
+\passthrough{\lstinline!g\_free!} to do the same thing, with support for
+some additional Glib functionality.
+
+\begin{lstlisting}[language=C]
+g_new (struct_type, n_struct)
+\end{lstlisting}
+
+\passthrough{\lstinline!g\_new!} is a macro to allocate memory for an
+array.
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!struct\_type!} is the type of the element of
+  the array.
+\item
+  \passthrough{\lstinline!n\_struct!} is the size of the array.
+\item
+  The return value is a pointer to the array. Its type is a pointer to
+  \passthrough{\lstinline!struct\_type!}.
+\end{itemize}
+
+For example,
+
+\begin{lstlisting}[language=C]
+char *s;
+s = g_new (char, 10);
+/* s points an array of char. The size of the array is 10. */
+
+struct tuple {int x, y;} *t;
+t = g_new (struct tuple, 5);
+/* t points an array of struct tuple. */
+/* The size of the array is 5. */
+\end{lstlisting}
+
+\passthrough{\lstinline!g\_free!} frees memory.
+
+\begin{lstlisting}[language=C]
+void
+g_free (gpointer mem);
+\end{lstlisting}
+
+If \passthrough{\lstinline!mem!} is NULL,
+\passthrough{\lstinline!g\_free!} does nothing.
+\passthrough{\lstinline!gpointer!} is a type of general pointer. It is
+the same as \passthrough{\lstinline!void *!}. This pointer can be casted
+to any pointer type. Conversely, any pointer type can be casted to
+\passthrough{\lstinline!gpointer!}.
+
+\begin{lstlisting}[language=C]
+g_free (s);
+/* Frees the memory allocated to s. */
+
+g_free (t);
+/* Frees the memory allocated to t. */
+\end{lstlisting}
+
+If the argument doesn't point allocated memory it will cause an error,
+specifically, a segmentation fault.
+
+Some Glib functions allocate memory. For example,
+\passthrough{\lstinline!g\_strdup!} allocates memory and copies a string
+given as an argument.
+
+\begin{lstlisting}[language=C]
+char *s;
+s = g_strdup ("Hello");
+g_free (s);
+\end{lstlisting}
+
+The string literal ``Hello'' has 6 bytes because the string has
+`\textbackslash0' at the end it. \passthrough{\lstinline!g\_strdup!}
+gets 6 bytes from the heap area and copies the string to the memory.
+\passthrough{\lstinline!s!} is assigned the top address of the memory.
+\passthrough{\lstinline!g\_free!} returns the memory to the heap area.
+
+\passthrough{\lstinline!g\_strdup!} is described in
+\href{https://docs.gtk.org/glib/func.strdup.html}{GLib API Reference}.
+The following is extracted from the reference.
+
+\begin{quote}
+The returned string should be freed with
+\passthrough{\lstinline!g\_free()!} when no longer needed.
+\end{quote}
+
+The function reference will describe if the returned value needs to be
+freed. If you forget to free the allocated memory it will remain
+allocated. Repeated use will cause more memory to be allocated to the
+program, which will grow over time. This is called a memory leak, and
+the only way to address this bug is to close the program (and restart
+it), which will automatically release all of the programs memory back to
+the system.
+
+Some GLib functions return a string which mustn't be freed by the
+caller.
+
+\begin{lstlisting}[language=C]
+const char *
+g_quark_to_string (GQuark quark);
+\end{lstlisting}
+
+This function returns \passthrough{\lstinline!const char*!} type. The
+qualifier \passthrough{\lstinline!const!} means that the returned value
+is immutable. The characters pointed by the returned value aren't be
+allowed to be changed or freed.
+
+If a variable is qualified with \passthrough{\lstinline!const!}, the
+variable can't be assigned except during initialization.
+
+\begin{lstlisting}[language=C]
+const int x = 10; /* initialization is OK. */
+
+x = 20; /* This is illegal because x is qualified with const */
+\end{lstlisting}

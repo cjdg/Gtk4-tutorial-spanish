@@ -1,0 +1,970 @@
+\hypertarget{template-xml-and-composite-widget}{%
+\section{Template XML and composite
+widget}\label{template-xml-and-composite-widget}}
+
+The tfe program in the previous section is not so good because many
+things are crammed into \passthrough{\lstinline!tfepplication.c!}. Many
+static variables in \passthrough{\lstinline!tfepplication.c!} shows
+that.
+
+\begin{lstlisting}[language=C]
+static GtkDialog *pref;
+static GtkFontButton *fontbtn;
+static GSettings *settings;
+static GtkDialog *alert;
+static GtkLabel *lb_alert;
+static GtkButton *btn_accept;
+
+static gulong pref_close_request_handler_id = 0;
+static gulong alert_close_request_handler_id = 0;
+static gboolean is_quit;
+\end{lstlisting}
+
+Generally, if there are many global or static variables in the program,
+it is not a good program. Such programs are difficult to maintain.
+
+The file \passthrough{\lstinline!tfeapplication.c!} should be divided
+into several files.
+
+\begin{itemize}
+\tightlist
+\item
+  \passthrough{\lstinline!tfeapplication.c!} only has codes related to
+  GtkApplication.
+\item
+  A file for GtkApplicationWindow
+\item
+  A file for a preference dialog
+\item
+  A file for an alert dialog
+\end{itemize}
+
+The preference dialog is defined by a ui file. And it has GtkBox,
+GtkLabel and GtkFontButton in it. Such widget is called composite
+widget. Composite widget is a child object (not child widget) of a
+widget. For example, the preference composite widget is a child object
+of GtkDialog. Composite widget can be built from template XML. Next
+subsection shows how to build a preference dialog.
+
+\hypertarget{preference-dialog}{%
+\subsection{Preference dialog}\label{preference-dialog}}
+
+First, write a template XML file.
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="TfePref" parent="GtkDialog">
+    <property name="title">Preferences</property>
+    <property name="resizable">FALSE</property>
+    <property name="modal">TRUE</property>
+    <child internal-child="content_area">
+      <object class="GtkBox" id="content_area">
+        <child>
+          <object class="GtkBox" id="pref_boxh">
+            <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+            <property name="spacing">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <child>
+              <object class="GtkLabel" id="fontlabel">
+                <property name="label">Font:</property>
+                <property name="xalign">1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkFontButton" id="fontbtn">
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  3: Template tag specifies a composite widget. The value of a class
+  attribute is the object name of the composite widget. This XML file
+  names the object ``TfePref''. It is defined in a C source file and it
+  will be shown later. A parent attribute specifies the direct parent
+  object of the composite widget. \passthrough{\lstinline!TfePref!} is a
+  child object of \passthrough{\lstinline!GtkDialog!}. Therefore the
+  value of the attribute is ``GtkDialog''. A parent attribute is
+  optional but it is recommended to specify.
+\end{itemize}
+
+Other lines are the same as before. The object
+\passthrough{\lstinline!TfePref!} is defined in
+\passthrough{\lstinline!tfepref.h!} and
+\passthrough{\lstinline!tfepref.c!}.
+
+\begin{lstlisting}[language=C, numbers=left]
+#ifndef __TFE_PREF_H__
+#define __TFE_PREF_H__
+
+#include <gtk/gtk.h>
+
+#define TFE_TYPE_PREF tfe_pref_get_type ()
+G_DECLARE_FINAL_TYPE (TfePref, tfe_pref, TFE, PREF, GtkDialog)
+
+GtkWidget *
+tfe_pref_new (GtkWindow *win);
+
+#endif /* __TFE_PREF_H__ */
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  6-7: When you define a new object, you need to write these two lines.
+  Refer to Section 8.
+\item
+  9-10: \passthrough{\lstinline!tfe\_pref\_new!} creates a new TfePref
+  object. It has a parameter \passthrough{\lstinline!win!} which is used
+  as a transient parent window to show the dialog.
+\end{itemize}
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfepref.h"
+
+struct _TfePref
+{
+  GtkDialog parent;
+  GSettings *settings;
+  GtkFontButton *fontbtn;
+};
+
+G_DEFINE_TYPE (TfePref, tfe_pref, GTK_TYPE_DIALOG);
+
+static void
+tfe_pref_dispose (GObject *gobject) {
+  TfePref *pref = TFE_PREF (gobject);
+
+  g_clear_object (&pref->settings);
+  G_OBJECT_CLASS (tfe_pref_parent_class)->dispose (gobject);
+}
+
+static void
+tfe_pref_init (TfePref *pref) {
+  gtk_widget_init_template (GTK_WIDGET (pref));
+  pref->settings = g_settings_new ("com.github.ToshioCP.tfe");
+  g_settings_bind (pref->settings, "font", pref->fontbtn, "font", G_SETTINGS_BIND_DEFAULT);
+}
+
+static void
+tfe_pref_class_init (TfePrefClass *class) {
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+  object_class->dispose = tfe_pref_dispose;
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/ToshioCP/tfe/tfepref.ui");
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TfePref, fontbtn);
+}
+
+GtkWidget *
+tfe_pref_new (GtkWindow *win) {
+  return GTK_WIDGET (g_object_new (TFE_TYPE_PREF, "transient-for", win, NULL));
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  3-8: The structure of an instance of this object. It has two
+  variables, settings and fontbtn.
+\item
+  10: \passthrough{\lstinline!G\_DEFINE\_TYPE!} macro. This macro
+  registers the TfePref type.
+\item
+  12-18: Dispose handler. This handler is called when the instance is
+  destroyed. The destruction process has two stages, disposing and
+  finalizing. When disposing, the instance releases all the references
+  (to the other instances). TfePref object holds a reference to the
+  GSettings instance. It is released in line 16. After that parents
+  dispose handler is called in line 17. For further information about
+  destruction process, refer to Section 11.
+\item
+  27-34: Class initialization function.
+\item
+  31: Set the dispose handler.
+\item
+  32:
+  \passthrough{\lstinline!gtk\_widget\_class\_set\_template\_from\_resource!}
+  function associates the description in the XML file
+  (\passthrough{\lstinline!tfepref.ui!}) with the widget. At this moment
+  no instance is created. It just make the class to know the structure
+  of the object. That's why the top level tag is not
+  \passthrough{\lstinline!<object>!} but
+  \passthrough{\lstinline!<template>!} in the XML file.
+\item
+  33:
+  \passthrough{\lstinline!gtk\_widget\_class\_bind\_template\_child!}
+  function binds a private variable of the object with a child object in
+  the template. This function is a macro. The name of the private
+  variable (\passthrough{\lstinline!fontbtn!} in line 7) and the id
+  \passthrough{\lstinline!fontbtn!} in the XML file (line 24) must be
+  the same. The pointer to the instance will be assigned to the variable
+  \passthrough{\lstinline!fontbtn!} when the instance is created.
+\item
+  20-25: Instance initialization function.
+\item
+  22: Creates the instance based on the template in the class. The
+  template has been made during the class initialization process.
+\item
+  23: Create GSettings instance with the id ``com.github.ToshioCP.tfe''.
+\item
+  24: Bind the font key in the GSettings object to the font property in
+  the GtkFontButton.
+\item
+  36-39: The function \passthrough{\lstinline!tfe\_pref\_new!} creates
+  an instance of TfePref. The parameter \passthrough{\lstinline!win!} is
+  a transient parent.
+\end{itemize}
+
+Now, It is very simple to use this dialog. A caller just creates this
+object and shows it.
+
+\begin{lstlisting}[language=C]
+TfePref *pref;
+pref = tfe_pref_new (win) /* win is the top-level window */
+gtk_widget_show (GTK_WINDOW (win));
+\end{lstlisting}
+
+This instance is automatically destroyed when a user clicks on the close
+button. That's all. If you want to show the dialog again, just create
+and show it.
+
+\hypertarget{alert-dialog}{%
+\subsection{Alert dialog}\label{alert-dialog}}
+
+It is almost same as preference dialog.
+
+Its XML file is:
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="TfeAlert" parent="GtkDialog">
+    <property name="title">Are you sure?</property>
+    <property name="resizable">FALSE</property>
+    <property name="modal">TRUE</property>
+    <child internal-child="content_area">
+      <object class="GtkBox">
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+            <property name="spacing">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <child>
+              <object class="GtkImage">
+                <property name="icon-name">dialog-warning</property>
+                <property name="icon-size">GTK_ICON_SIZE_LARGE</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="lb_alert">
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child type="action">
+      <object class="GtkButton" id="btn_cancel">
+        <property name="label">Cancel</property>
+      </object>
+    </child>
+    <child type="action">
+      <object class="GtkButton" id="btn_accept">
+        <property name="label">Close</property>
+      </object>
+    </child>
+    <action-widgets>
+      <action-widget response="cancel" default="true">btn_cancel</action-widget>
+      <action-widget response="accept">btn_accept</action-widget>
+    </action-widgets>
+  </template>
+</interface>
+\end{lstlisting}
+
+The header file is:
+
+\begin{lstlisting}[language=C, numbers=left]
+#ifndef __TFE_ALERT_H__
+#define __TFE_ALERT_H__
+
+#include <gtk/gtk.h>
+
+#define TFE_TYPE_ALERT tfe_alert_get_type ()
+G_DECLARE_FINAL_TYPE (TfeAlert, tfe_alert, TFE, ALERT, GtkDialog)
+
+void
+tfe_alert_set_message (TfeAlert *alert, const char *message);
+
+void
+tfe_alert_set_button_label (TfeAlert *alert, const char *label);
+
+GtkWidget *
+tfe_alert_new (GtkWindow *win);
+
+#endif /* __TFE_ALERT_H__ */
+\end{lstlisting}
+
+There are three public functions. The functions
+\passthrough{\lstinline!tfe\_alert\_set\_message!} and
+\passthrough{\lstinline!tfe\_alert\_set\_button\_label!} sets the label
+and button name of the alert dialog. For example, if you want to show an
+alert that the user tries to close without saving the content, set them
+like:
+
+\begin{lstlisting}[language=C]
+tfe_alert_set_message (alert, "Are you really close without saving?"); /* alert points to a TfeAlert instance */
+tfe_alert_set_button_label (alert, "Close");
+\end{lstlisting}
+
+The function \passthrough{\lstinline!tfe\_alert\_new!} creates a
+TfeAlert dialog.
+
+The C source file is:
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfealert.h"
+
+struct _TfeAlert
+{
+  GtkDialog parent;
+  GtkLabel *lb_alert;
+  GtkButton *btn_accept;
+};
+
+G_DEFINE_TYPE (TfeAlert, tfe_alert, GTK_TYPE_DIALOG);
+
+void
+tfe_alert_set_message (TfeAlert *alert, const char *message) {
+  gtk_label_set_text (alert->lb_alert, message);
+}
+
+void
+tfe_alert_set_button_label (TfeAlert *alert, const char *label) {
+  gtk_button_set_label (alert->btn_accept, label);
+}
+
+static void
+tfe_alert_init (TfeAlert *alert) {
+  gtk_widget_init_template (GTK_WIDGET (alert));
+}
+
+static void
+tfe_alert_class_init (TfeAlertClass *class) {
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/ToshioCP/tfe/tfealert.ui");
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TfeAlert, lb_alert);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TfeAlert, btn_accept);
+}
+
+GtkWidget *
+tfe_alert_new (GtkWindow *win) {
+  return GTK_WIDGET (g_object_new (TFE_TYPE_ALERT, "transient-for", win, NULL));
+}
+\end{lstlisting}
+
+The program is almost same as \passthrough{\lstinline!tfepref.c!}.
+
+The instruction how to use this object is as follows.
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Write a ``response'' signal handler.
+\item
+  Create a TfeAlert object.
+\item
+  Connect ``response'' signal to a handler
+\item
+  Show the dialog
+\item
+  In the signal handler, do something with regard to the response-id.
+  Then destroy the dialog.
+\end{enumerate}
+
+\hypertarget{top-level-window}{%
+\subsection{Top-level window}\label{top-level-window}}
+
+In the same way, create a child object of GtkApplicationWindow. The
+object name is ``TfeWindow''.
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="TfeWindow" parent="GtkApplicationWindow">
+    <property name="title">file editor</property>
+    <property name="default-width">600</property>
+    <property name="default-height">400</property>
+    <child>
+      <object class="GtkBox" id="boxv">
+        <property name="orientation">GTK_ORIENTATION_VERTICAL</property>
+        <child>
+          <object class="GtkBox" id="boxh">
+            <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
+            <child>
+              <object class="GtkLabel" id="dmy1">
+                <property name="width-chars">10</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btno">
+                <property name="label">Open</property>
+                <property name="action-name">win.open</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btns">
+                <property name="label">Save</property>
+                <property name="action-name">win.save</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="dmy2">
+                <property name="hexpand">TRUE</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="btnc">
+                <property name="label">Close</property>
+                <property name="action-name">win.close</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkMenuButton" id="btnm">
+                <property name="direction">down</property>
+                <property name="halign">start</property>
+                <property name="icon-name">open-menu-symbolic</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="dmy3">
+                <property name="width-chars">10</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkNotebook" id="nb">
+            <property name="scrollable">TRUE</property>
+            <property name="hexpand">TRUE</property>
+            <property name="vexpand">TRUE</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
+\end{lstlisting}
+
+This XML file is almost same as before except template tag and
+``action-name'' property in buttons.
+
+GtkButton implements GtkActionable interface, which has ``action-name''
+property. If this property is set, GtkButton activates the action when
+it is clicked. For example, if an open button is clicked, ``win.open''
+action will be activated and \passthrough{\lstinline!open\_activated!}
+handler will be invoked.
+
+This action is also used by ``\textless Control\textgreater o''
+accelerator (See the source code of
+\passthrough{\lstinline!tfewindow.c!} below). If you use ``clicked''
+signal for the button, you need its signal handler. Then, there are two
+handlers:
+
+\begin{itemize}
+\tightlist
+\item
+  a handler for the ``clicked'' signal on the button
+\item
+  a handler for the ``activate'' signal on the ``win.open'' action, to
+  which ``\textless Control\textgreater o'' accelerator is connected
+\end{itemize}
+
+These two handlers do almost same thing. It is inefficient. Connecting
+buttons to actions is a good way to reduce unnecessary codes.
+
+\begin{lstlisting}[language=C, numbers=left]
+#ifndef __TFE_WINDOW_H__
+#define __TFE_WINDOW_H__
+
+#include <gtk/gtk.h>
+
+#define TFE_TYPE_WINDOW tfe_window_get_type ()
+G_DECLARE_FINAL_TYPE (TfeWindow, tfe_window, TFE, WINDOW, GtkApplicationWindow)
+
+void
+tfe_window_notebook_page_new (TfeWindow *win);
+
+void
+tfe_window_notebook_page_new_with_files (TfeWindow *win, GFile **files, int n_files);
+
+GtkWidget *
+tfe_window_new (GtkApplication *app);
+
+#endif /* __TFE_WINDOW_H__ */
+\end{lstlisting}
+
+There are three public functions. The function
+\passthrough{\lstinline!tfe\_window\_notebook\_page\_new!} creates a new
+notebook page. This is a wrapper function for
+\passthrough{\lstinline!notebook\_page\_new!}. It is called by
+GtkApplication object. The function
+\passthrough{\lstinline!tfe\_window\_notebook\_page\_new\_with\_files!}
+creates notebook pages with a contents read from the given files. The
+function \passthrough{\lstinline!tfe\_window\_new!} creates a TfeWindow
+instance.
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfewindow.h"
+#include "tfenotebook.h"
+#include "tfepref.h"
+#include "tfealert.h"
+#include "css.h"
+
+struct _TfeWindow {
+  GtkApplicationWindow parent;
+  GtkMenuButton *btnm;
+  GtkNotebook *nb;
+  GSettings *settings;
+  gboolean is_quit;
+};
+
+G_DEFINE_TYPE (TfeWindow, tfe_window, GTK_TYPE_APPLICATION_WINDOW);
+
+/* alert response signal handler */
+static void
+alert_response_cb (GtkDialog *alert, int response_id, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  if (response_id == GTK_RESPONSE_ACCEPT) {
+    if (win->is_quit)
+      gtk_window_destroy(GTK_WINDOW (win));
+    else
+      notebook_page_close (win->nb);
+  }
+  gtk_window_destroy (GTK_WINDOW (alert));
+}
+
+/* ----- action activated handlers ----- */
+static void
+open_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  notebook_page_open (GTK_NOTEBOOK (win->nb));
+}
+
+static void
+save_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  notebook_page_save (GTK_NOTEBOOK (win->nb));
+}
+
+static void
+close_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+  TfeAlert *alert;
+
+  if (has_saved (win->nb))
+    notebook_page_close (win->nb);
+  else {
+    win->is_quit = false;
+    alert = TFE_ALERT (tfe_alert_new (GTK_WINDOW (win)));
+    tfe_alert_set_message (alert, "Contents aren't saved yet.\nAre you sure to close?");
+    tfe_alert_set_button_label (alert, "Close");
+    g_signal_connect (GTK_DIALOG (alert), "response", G_CALLBACK (alert_response_cb), win);
+    gtk_widget_show (GTK_WIDGET (alert));
+  }
+}
+
+static void
+new_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  notebook_page_new (GTK_NOTEBOOK (win->nb));
+}
+
+static void
+saveas_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  notebook_page_saveas (GTK_NOTEBOOK (win->nb));
+}
+
+static void
+pref_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+  GtkWidget *pref;
+
+  pref = tfe_pref_new (GTK_WINDOW (win));
+  gtk_widget_show (pref);
+}
+
+static void
+quit_activated (GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+  TfeWindow *win = TFE_WINDOW (user_data);
+
+  TfeAlert *alert;
+
+  if (has_saved_all (GTK_NOTEBOOK (win->nb)))
+    gtk_window_destroy (GTK_WINDOW (win));
+  else {
+    win->is_quit = true;
+    alert = TFE_ALERT (tfe_alert_new (GTK_WINDOW (win)));
+    tfe_alert_set_message (alert, "Contents aren't saved yet.\nAre you sure to quit?");
+    tfe_alert_set_button_label (alert, "Quit");
+    g_signal_connect (GTK_DIALOG (alert), "response", G_CALLBACK (alert_response_cb), win);
+    gtk_widget_show (GTK_WIDGET (alert));
+  }
+}
+
+/* gsettings changed::font signal handler */
+static void
+changed_font_cb (GSettings *settings, char *key, gpointer user_data) {
+  GtkWindow *win = GTK_WINDOW (user_data); 
+  char *font;
+  PangoFontDescription *pango_font_desc;
+
+  font = g_settings_get_string (settings, "font");
+  pango_font_desc = pango_font_description_from_string (font);
+  g_free (font);
+  set_font_for_display_with_pango_font_desc (win, pango_font_desc);
+}
+
+/* --- public functions --- */
+
+void
+tfe_window_notebook_page_new (TfeWindow *win) {
+  notebook_page_new (win->nb);
+}
+
+void
+tfe_window_notebook_page_new_with_files (TfeWindow *win, GFile **files, int n_files) {
+  int i;
+
+  for (i = 0; i < n_files; i++)
+    notebook_page_new_with_file (win->nb, files[i]);
+  if (gtk_notebook_get_n_pages (win->nb) == 0)
+    notebook_page_new (win->nb);
+}
+
+/* --- TfeWindow object construction/destruction --- */ 
+static void
+tfe_window_dispose (GObject *gobject) {
+  TfeWindow *window = TFE_WINDOW (gobject);
+
+  g_clear_object (&window->settings);
+  G_OBJECT_CLASS (tfe_window_parent_class)->dispose (gobject);
+}
+
+static void
+tfe_window_init (TfeWindow *win) {
+  GtkBuilder *build;
+  GMenuModel *menu;
+
+  gtk_widget_init_template (GTK_WIDGET (win));
+
+  build = gtk_builder_new_from_resource ("/com/github/ToshioCP/tfe/menu.ui");
+  menu = G_MENU_MODEL (gtk_builder_get_object (build, "menu"));
+  gtk_menu_button_set_menu_model (win->btnm, menu);
+  g_object_unref(build);
+
+  win->settings = g_settings_new ("com.github.ToshioCP.tfe");
+  g_signal_connect (win->settings, "changed::font", G_CALLBACK (changed_font_cb), win);
+
+/* ----- action ----- */
+  const GActionEntry win_entries[] = {
+    { "open", open_activated, NULL, NULL, NULL },
+    { "save", save_activated, NULL, NULL, NULL },
+    { "close", close_activated, NULL, NULL, NULL },
+    { "new", new_activated, NULL, NULL, NULL },
+    { "saveas", saveas_activated, NULL, NULL, NULL },
+    { "pref", pref_activated, NULL, NULL, NULL },
+    { "close-all", quit_activated, NULL, NULL, NULL }
+  };
+  g_action_map_add_action_entries (G_ACTION_MAP (win), win_entries, G_N_ELEMENTS (win_entries), win);
+
+  changed_font_cb(win->settings, "font", win);
+}
+
+static void
+tfe_window_class_init (TfeWindowClass *class) {
+  GObjectClass *object_class = G_OBJECT_CLASS (class);
+
+  object_class->dispose = tfe_window_dispose;
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (class), "/com/github/ToshioCP/tfe/tfewindow.ui");
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TfeWindow, btnm);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (class), TfeWindow, nb);
+}
+
+GtkWidget *
+tfe_window_new (GtkApplication *app) {
+  return GTK_WIDGET (g_object_new (TFE_TYPE_WINDOW, "application", app, NULL));
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  17-29: \passthrough{\lstinline!alert\_response\_cb!} is a call back
+  function of the ``response'' signal of TfeAlert dialog. This is the
+  same as before except
+  \passthrough{\lstinline!gtk\_window\_destroy(GTK\_WINDOW (win))!} is
+  used instead of \passthrough{\lstinline!tfe\_application\_quit!}.
+\item
+  31-102: Handlers of action activated signal. The
+  \passthrough{\lstinline!user\_data!} is a pointer to TfeWindow
+  instance.
+\item
+  104-115: A handler of ``changed::font'' signal of GSettings object.
+\item
+  111: Gets the font from GSettings data.
+\item
+  112: Gets a PangoFontDescription from the font. In the previous
+  version, the program gets the font description from the GtkFontButton.
+  The button data and GSettings data are the same. Therefore, the data
+  got here is the same as the data in the GtkFontButton. In addition, we
+  don't need to worry about the preference dialog is alive or not thanks
+  to the GSettings.
+\item
+  114: Sets CSS on the display with the font description.
+\item
+  117-132: Public functions.
+\item
+  134-141: Dispose handler. The GSettings object needs to be released.
+\item
+  143-171: Instance initialization function.
+\item
+  148: Creates a composite widget instance with the template.
+\item
+  151-153: Insert \passthrough{\lstinline!menu!} to the menu button.
+\item
+  155-156: Creates a GSettings instance with the id
+  ``com.github.ToshioCP.tfe''. Connects ``changed::font'' signal to the
+  handler \passthrough{\lstinline!changed\_font\_cb!}. This signal emits
+  when the GSettings data is changed. The second part ``font'' of the
+  signal name ``changed::font'' is called details. Signals can have
+  details. If a GSettings instance has more than one key, ``changed''
+  signal emits only if the key, which has the same name as the detail,
+  changes its value. For example, Suppose a GSettings object has three
+  keys ``a'', ``b'' and ``c''.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    ``changed::a'' is emitted when the value of the key ``a'' is
+    changed. It isn't emitted when the value of ``b'' or ``c'' is
+    changed.
+  \item
+    ``changed::b'' is emitted when the value of the key ``b'' is
+    changed. It isn't emitted when the value of ``a'' or ``c'' is
+    changed.
+  \item
+    ``changed::c'' is emitted when the value of the key ``c'' is
+    changed. It isn't emitted when the value of ``a'' or ``b'' is
+    changed. In this version of tfe, there is only one key (``font'').
+    So, even if the signal doesn't have a detail, the result is the
+    same. But in the future version, it will probably need details.
+  \end{itemize}
+\item
+  158-168: Creates actions.
+\item
+  170: Sets CSS font.
+\item
+  173-181: Class initialization function.
+\item
+  177: Sets the dispose handler.
+\item
+  178: Sets the composite widget template
+\item
+  179-180: Binds private variable with child objects in the template.
+\item
+  183-186: \passthrough{\lstinline!tfe\_window\_new!}. This function
+  creates TfeWindow instance.
+\end{itemize}
+
+\hypertarget{tfeapplication}{%
+\subsection{TfeApplication}\label{tfeapplication}}
+
+The file \passthrough{\lstinline!tfeapplication.c!} is now very simple.
+
+\begin{lstlisting}[language=C, numbers=left]
+#include "tfewindow.h"
+
+/* ----- activate, open, startup handlers ----- */
+static void
+app_activate (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+
+  tfe_window_notebook_page_new (TFE_WINDOW (win));
+  gtk_widget_show (GTK_WIDGET (win));
+}
+
+static void
+app_open (GApplication *application, GFile ** files, gint n_files, const gchar *hint) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  GtkWidget *win = GTK_WIDGET (gtk_application_get_active_window (app));
+
+  tfe_window_notebook_page_new_with_files (TFE_WINDOW (win), files, n_files);
+  gtk_widget_show (win);
+}
+
+static void
+app_startup (GApplication *application) {
+  GtkApplication *app = GTK_APPLICATION (application);
+  int i;
+
+  tfe_window_new (app);
+
+/* ----- accelerator ----- */ 
+  struct {
+    const char *action;
+    const char *accels[2];
+  } action_accels[] = {
+    { "win.open", { "<Control>o", NULL } },
+    { "win.save", { "<Control>s", NULL } },
+    { "win.close", { "<Control>w", NULL } },
+    { "win.new", { "<Control>n", NULL } },
+    { "win.saveas", { "<Shift><Control>s", NULL } },
+    { "win.close-all", { "<Control>q", NULL } },
+  };
+
+  for (i = 0; i < G_N_ELEMENTS(action_accels); i++)
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), action_accels[i].action, action_accels[i].accels);
+}
+
+/* ----- main ----- */
+
+#define APPLICATION_ID "com.github.ToshioCP.tfe"
+
+int
+main (int argc, char **argv) {
+  GtkApplication *app;
+  int stat;
+
+  app = gtk_application_new (APPLICATION_ID, G_APPLICATION_HANDLES_OPEN);
+
+  g_signal_connect (app, "startup", G_CALLBACK (app_startup), NULL);
+  g_signal_connect (app, "activate", G_CALLBACK (app_activate), NULL);
+  g_signal_connect (app, "open", G_CALLBACK (app_open), NULL);
+
+  stat =g_application_run (G_APPLICATION (app), argc, argv);
+  g_object_unref (app);
+  return stat;
+}
+\end{lstlisting}
+
+\begin{itemize}
+\tightlist
+\item
+  4-11: Activate signal handler. It uses
+  \passthrough{\lstinline!tfe\_window\_notebook\_page\_new!} instead of
+  \passthrough{\lstinline!notebook\_page\_new!}.
+\item
+  13-20: Open signal handler. Thanks to
+  \passthrough{\lstinline!tfe\_window\_notebook\_page\_new\_with\_files!},
+  this handler becomes very simple.
+\item
+  22-44: Startup signal handler. Most of the tasks are moved to
+  TfeWindow, the remaining tasks are creating a window and setting
+  accelerations.
+\item
+  48-64: A function \passthrough{\lstinline!main!}.
+\end{itemize}
+
+\hypertarget{other-files}{%
+\subsection{Other files}\label{other-files}}
+
+Resource XML file.
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/github/ToshioCP/tfe">
+    <file>tfewindow.ui</file>
+    <file>tfepref.ui</file>
+    <file>tfealert.ui</file>
+    <file>menu.ui</file>
+  </gresource>
+</gresources>
+\end{lstlisting}
+
+GSchema XML file
+
+\begin{lstlisting}[language=XML, numbers=left]
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/com/github/ToshioCP/tfe/" id="com.github.ToshioCP.tfe">
+    <key name="font" type="s">
+      <default>'Monospace 12'</default>
+      <summary>Font</summary>
+      <description>The font to be used for textview.</description>
+    </key>
+  </schema>
+</schemalist>
+\end{lstlisting}
+
+Meson.build
+
+\begin{lstlisting}[numbers=left]
+project('tfe', 'c')
+
+gtkdep = dependency('gtk4')
+
+gnome=import('gnome')
+resources = gnome.compile_resources('resources','tfe.gresource.xml')
+gnome.compile_schemas(build_by_default: true, depend_files: 'com.github.ToshioCP.tfe.gschema.xml')
+
+sourcefiles=files('tfeapplication.c', 'tfewindow.c', 'tfenotebook.c', 'tfepref.c', 'tfealert.c', 'css.c', '../tfetextview/tfetextview.c')
+
+executable('tfe', sourcefiles, resources, dependencies: gtkdep, export_dynamic: true, install: true)
+
+schema_dir = get_option('prefix') / get_option('datadir') / 'glib-2.0/schemas/'
+install_data('com.github.ToshioCP.tfe.gschema.xml', install_dir: schema_dir)
+meson.add_install_script('glib-compile-schemas', schema_dir)
+\end{lstlisting}
+
+\hypertarget{compilation-and-installation.}{%
+\subsection{Compilation and
+installation.}\label{compilation-and-installation.}}
+
+If you build Gtk4 from the source, use
+\passthrough{\lstinline!--prefix!} option.
+
+\begin{lstlisting}
+$ meson --prefix=$HOME/local _build
+$ ninja -C _build
+$ ninja -C _build install
+\end{lstlisting}
+
+If you install Gtk4 from the distribution packages, you don't need the
+prefix option. Maybe you need root privilege to install it.
+
+\begin{lstlisting}
+$ meson _build
+$ ninja -C _build
+$ ninja -C _build install  # or 'sudo ninja -C _build install'
+\end{lstlisting}
+
+Source files are in src/tfe7 directory.
+
+We made a very small text editor. You can add features to this editor.
+When you add a new feature, care about the structure of the program.
+Maybe you need to divide a file into several files like this section. It
+isn't good to put many things into one file. And it is important to
+think about the relationship between source files and widget structures.
+It is appropriate that they correspond to each other in many cases.
