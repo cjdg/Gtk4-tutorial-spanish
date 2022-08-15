@@ -1,6 +1,6 @@
-# Gtk4 Tutorial for beginners
+# Tutorial Gtk4 para principiantes
 
-The github page of this tutorial is also available. Click [here](https://toshiocp.github.io/Gtk4-tutorial/).
+La página Github de este tutorial se encuentra [aqui](https://cjdg.github.io/Gtk4-tutorial-spanish//).
 
 #### Contenido de este repositorio
 

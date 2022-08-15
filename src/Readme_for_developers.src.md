@@ -311,7 +311,7 @@ Adicionalmente, otras conversiones son realizadas por el método `src2md`.
 
 El orden de las conversiones es:
 
-1. @@@if
+1. @@@if## Src directory and the top directory
 2. @@@table
 3. @@@include
 4. @@@shell
@@ -337,7 +337,13 @@ Es posible que estos directorios no existan antes de la conversión.
 - lib: contiene las líbrerias de ruby.
 - test: contiene los archivos de prueba, estos se realizan escribiendo `rake test` en la terminal.
 
-## Src directory and the top directory
+## Directorios Src y superior.
+
+El directorio Src contiene los archivos .src.md y los archivo fuente C.
+El directorio principal, que es gt\_tutotial_spanish, contiene los archivos `Rakefile`, `src2md.rb` y otros.
+Cuando el archivo `Readme.md` es generado, se ubicará en el directorio principal.
+`Readme.md` tiene título, resumen, tabla de contenido con enlaces a los archivos GFM.
+
 
 Src directory contains .src.md files and C-related source files.
 The top directory, which is gtk\_tutorial directory, contains `Rakefile`, `src2md.rb` and some other files.
