@@ -1,37 +1,38 @@
 Up: [Readme.md](../Readme.md),  Prev: [Section 1](sec1.md), Next: [Section 3](sec3.md)
 
-# Installing Gtk4 into Linux distributions
+# Instalar Gtk4 en Linux
 
-This section describes how to install Gtk4 into Linux distributions.
+Esta sección describe como instalar Gtk4 en las distribuciones Linux.
 
-This tutorial is without any warranty.
-If you want to install Gtk4 to your computer, do it at your own risk.
+No hay garantía.
 
-The information in this section is the one on April/27/2022.
-The words 'at present' and/or 'now' in this section means 'April/27/2022'.
+Si instalas Gtk4 es bajo tu propio riesgo.
 
-There are three possible way to install Gtk4.
+La inforación de esta sección es del 27 de Abril de 2022.
 
-- Install it from the distribution packages.
-- Build it from the source file.
-- Install a Gnome 40 distribution with the gnome-boxes.
+Las palabras 'actualmente' y/o "ahora" en esta sección se ubican en esta fecha.
 
-## Installation from the distribution packages
+Existen 3 maneras de instalar Gtk4.
 
-The first way is easy to install.
-It is a recommended way.
-I've installed Gtk4 packages in Ubuntu 21.04.
-(Now, my Ubuntu version is 21.10).
+- Paquetes de la distribución.
+- Compilarlo desde la fuente.
+- Instalar una distribución con Gnome 40 y gnome-boxes.
+
+## Instalación desde los paquetes de la distribución
+
+La primera manera es la más fácil de instalar, y la recomendada.
+
+Se ha probado usando Ubuntu 22.04 que es la versión mas reciente de Ubuntu.
 
 ~~~
 $ sudo apt-get install libgtk-4-bin libgtk-4-common libgtk-4-dev libgtk-4-doc
 ~~~
 
-Fedora, Arch, Debian and OpenSUSE are also possible.
-See [Installing GTK from packages](https://www.gtk.org/docs/installations/linux#installing-gtk-from-packages).
-The following table shows the distributions which support Gtk4.
+También es posible en Fedora, Arch, Debian y OpenSUSE.
+Ver [Installing GTK from packages](https://www.gtk.org/docs/installations/linux#installing-gtk-from-packages).
+La siguiente tabla muestra las distribuciones que soportan Gtk4.
 
-|Distribution|          version          |Gtk4 |   Gnome40    |
+|Distribución|          version          |Gtk4 |   Gnome40    |
 |:----------:|:-------------------------:|:---:|:------------:|
 |   Fedora   |            36             |4.4.2|   Gnome42    |
 |   Ubuntu   |         22.04lts          | 4.4 |Gnome41(4.6.2)|
@@ -40,43 +41,40 @@ The following table shows the distributions which support Gtk4.
 |   Gentoo   |      rolling release      |4.6.5|   Gnome42    |
 |  OpenSUSE  |Tumbleweed(rolling release)|4.6.5|   Gnome42    |
 
-If you've installed Gtk4 from the packages, you don't need to read the rest of this section.
+Si has instalado Gtk4 desde los paquetes, no necesitas leer el resto de esta sección.
 
-## Installation from the source file
+## Instalación desde los archivos fuente
 
-If your operating system doesn't have Gtk4 packages, you need to build it from the source.
-Or, if you want the latest version of Gtk4 (4.6.3), you also need to build it from the source.
+Si tu sistema operativo no tiene los paquetes de Gtk4 o deseas tener la versión mas reciente, necesitas compilarlo desde la fuente.
 
-I installed Gtk4 from the source in January 2021.
-So, the following information is old, especially for the version of each software.
-For the latest information, see [Gtk API Reference, Building GTK](https://docs.gtk.org/gtk4/building.html).
+Se ha probado la instalación desde la fuente en Enero 2021.
+Por lo tanto la siguiente información es antigua, specialmente la versión de cada software.
+Para la información mas reciente, ve [Gtk API Reference, Building GTK](https://docs.gtk.org/gtk4/building.html).
 
-### Prerequisites for Gtk4 installation
+### Requisitos para instalar Gtk4 desde la fuente
 
-- Linux operating system. For example, Ubuntu 20.10 or 20.04LTS.
-Other distributions might be OK.
-- Packages for development such as gcc, meson, ninja, git, wget and so on.
-- Dev package is necessary for each software below.
+- Sistema operativo Linux, por ejemplo, Ubuntu 22.04 LTS
+- Paquetes de desarrollo como gcc, meson, ninja, git, wget, etc.
+- Los paquetes dev son necesarios para cada software a continuación.
 
-### Installation target
+### Objetivo de la instalación
 
-I installed Gtk4 under the directory `$HOME/local`.
-This is a private user area.
+Se ha instalado Gtk4 dentro del directorio `$HOME/local`.
+esta es una área privada del usuario.
 
-If you want to install it in the system area, `/opt/gtk4` is one of good choices.
-[Gtk API Reference, Building GTK](https://docs.gtk.org/gtk4/building.html) gives an installation example to `/opt/gtk4`.
+Si deseas instalarlo en el área del sistema, `/opt/gtk4` es un buen lugar.
+[Gtk API Reference, Building GTK](https://docs.gtk.org/gtk4/building.html) te da una buena descripción para hacerlo en `/opt/gtk4`.
 
-Don't install it to `/usr/local` which is the default.
-It is used by Ubuntu applications which are not build on Gtk4.
-Therefore, the risk is high and probably bad things will happen.
-Actually I did it and I needed to reinstall Ubuntu.
+Nunca lo instales en `/usr/local` que es el predeterminado.
+Es usado por las aplicaciones de Ubuntu que no han sido construidas con Gtk4.
+Entonces hay altas probabilidades de dañar algo.
 
-### Installation to Ubuntu 20.10
+### Instalación en Ubuntu 21.10+
 
-Most of the necessary libraries are included by Ubuntu 20.10.
-Therefore, they can be installed with `apt-get` command.
-You don't need to install them from the source tarballs.
-You can skip the subsections below about prerequisite library installation (Glib, Pango, Gdk-pixbuf and Gtk-doc).
+La mayoría de las bibliotecas están incluídas por Ubuntu 20.10+.
+Por lo tanto puede ser instalado con `apt-get`.
+Y no es necesario instalarla desde los archivos fuente.
+Puedes saltarte las secciones siguientes (Glib, Pango, Gdk-pixbuf y Gtk-doc).
 
 ### Glib installation
 

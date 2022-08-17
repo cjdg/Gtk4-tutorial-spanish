@@ -1,6 +1,6 @@
 # Tutorial Gtk4 para principiantes
 
-La página Github de este tutorial se encuentra [aqui](https://cjdg.github.io/Gtk4-tutorial-spanish//).
+Pagina Github disponible [aqui](https://cjdg.github.io/Gtk4-tutorial-spanish///).
 
 #### Contenido de este repositorio
 
@@ -26,7 +26,7 @@ La vieja documentación se encuentra en [Gtk Reference Manual](https://developer
 El nuevo sitio se encuentra en progreso actualmente, asi que a veces tendrás que revisar la vieja version
 
 Si deseas conocer mas acerca de GObject y el sistema de tipos, por favor lee [GObject tutorial](https://github.com/ToshioCP/Gobject-tutorial).
-Los detalles de GObje1ct son fáciles de entender y necesarios para escribir programas en Gtk4.
+Los detalles de GObject son fáciles de entender y necesarios para escribir programas en Gtk4.
 
 
 
@@ -51,10 +51,10 @@ Escribe `rake html` para HTML.
 Escribe `rake pdf` para PDF.
 Existe una documentación \("[Cómo construir el Tutorial Gtk4](src/gfm/Readme_for_developers.md)"\) que describe como hacerlo.
 
-## Tabla de contenidos
+## Contenido
 
-1. [Prerequisite and License](gfm/sec1.md)
-1. [Installing Gtk4 into Linux distributions](gfm/sec2.md)
+1. [Prerequisitos y licencia](gfm/sec1.md)
+1. [Instalar Gtk4 en Linux](gfm/sec2.md)
 1. [GtkApplication and GtkApplicationWindow](gfm/sec3.md)
 1. [Widgets (1)](gfm/sec4.md)
 1. [Widgets (2)](gfm/sec5.md)

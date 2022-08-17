@@ -1,42 +1,44 @@
 Up: [Readme.md](../Readme.md),  Next: [Section 2](sec2.md)
 
-# Prerequisite and License
+# Prerequisitos y licencia
 
-## Prerequisite
+## Prerequisitos
 
-### Gtk4 on a Linux OS
+### Gtk4 en Linux
+Este tutorial es acerca de las librerías Gtk4.
+Se usan en Linux con un compilador C, pero ahora se usan mas ampliamente, en Windows y MacOs, con Vala, Python, etc.
+Sin embargo, este tutorial trata sólo _programas Linux escritos en C_.
 
-This tutorial is about Gtk4 libraries.
-It is originally used on Linux with C compiler, but now it is used more widely, on Windows and MacOS, with Vala, Python and so on.
-However, this tutorial describes only _C programs on Linux_.
+Si deseas probar los ejemplos de este tutorial, necesitas:
 
-If you want to try the examples in the tutorial, you need:
 
-- PC with Linux distribution like Ubuntu, Debian and so on.
+- PC con Linux cómo Ubuntu, Debian, etc.
 - Gcc.
 - Gtk4.
-The stable version of Gtk on Linux distributions is version three at present.
-You need to install Gtk4 to your computer.
-See [Section 3](sec3.md) for the installation of Gtk4.
 
-### Ruby and rake for making the document
+La versión estable actual en las distribuciones recientes de Linux es la 4.
+Necesitas instalar la librería en tu computadora.
+Ve [Sección 3](sec3.md) para la instalación de Gtk4.
 
-This repository includes Ruby programs.
-They are used to make Markdown files, HTML files, Latex files and a PDF file.
+### Ruby y rake para crear la documentación
 
-You need:
+Este repositorio incluye programas escritos en Ruby.
+Se usan para hacer los archivos Markdown, HTML, Latex y PDF.
 
-- Linux distribution like Ubuntu.
-- Ruby programming language.
-There are two ways to install it.
-One is installing the distribution's package.
-The other is using rbenv and ruby-build.
-If you want to use the latest version of ruby, use rbenv.
-- Rake.
-It is a gem, which is a library written in Ruby.
-You can install it as a package of your distribution or use gem command.
+Necesitas:
 
-## License
+- Distribución Linux como Ubuntu.
+- Lengua Ruby instalado.
+
+Hay 2 maneras de instalarlo.
+Uno es usar los paquetes de la distribución.
+La otra es usando rbenv y ruby-build.
+Si deseas usar la última version de Ruby, usa rbenv.
+- Rake
+Es una gema, que es una líbrería escrita en Ruby.
+Puedes instalarlo como un paquete en la distribución o usar el comando gem.
+
+## Licencia
 
 Copyright (C) 2020  ToshioCP (Toshio Sekiya)
 
