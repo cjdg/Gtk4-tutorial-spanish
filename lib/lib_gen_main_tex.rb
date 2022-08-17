@@ -72,7 +72,7 @@ EOS
   main = <<~EOS
   \\documentclass[a4paper]{article}
   \\include{helper.tex}
-  \\title{Gtk4 tutorial for beginners}
+  \\title{Tutorial de Gtk4 para Principiantes}
   \\author{Toshio Sekiya}
   \\date{}
   \\begin{document}

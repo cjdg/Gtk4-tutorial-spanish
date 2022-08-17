@@ -5,7 +5,7 @@
     <meta name="generator" content="pandoc" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>Gtk4 tutorial</title>
+    <title>Tutorial Gtk4</title>
     <style>
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -89,7 +89,7 @@
     <div class="container">
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
       <div class="container-fluid">
-        <span class="navbar-brand">Gtk4 tutorial</span>
+        <span class="navbar-brand">Tutorial Gtk4</span>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -111,24 +111,27 @@
         </div>
       </div>
     </nav>
-<h1 id="installing-gtk4-into-linux-distributions">Installing Gtk4 into Linux distributions</h1>
-<p>This section describes how to install Gtk4 into Linux distributions.</p>
-<p>This tutorial is without any warranty. If you want to install Gtk4 to your computer, do it at your own risk.</p>
-<p>The information in this section is the one on April/27/2022. The words ‘at present’ and/or ‘now’ in this section means ‘April/27/2022’.</p>
-<p>There are three possible way to install Gtk4.</p>
+<h1 id="instalar-gtk4-en-linux">Instalar Gtk4 en Linux</h1>
+<p>Esta sección describe como instalar Gtk4 en las distribuciones Linux.</p>
+<p>No hay garantía.</p>
+<p>Si instalas Gtk4 es bajo tu propio riesgo.</p>
+<p>La inforación de esta sección es del 27 de Abril de 2022.</p>
+<p>Las palabras ‘actualmente’ y/o “ahora” en esta sección se ubican en esta fecha.</p>
+<p>Existen 3 maneras de instalar Gtk4.</p>
 <ul>
-<li>Install it from the distribution packages.</li>
-<li>Build it from the source file.</li>
-<li>Install a Gnome 40 distribution with the gnome-boxes.</li>
+<li>Paquetes de la distribución.</li>
+<li>Compilarlo desde la fuente.</li>
+<li>Instalar una distribución con Gnome 40 y gnome-boxes.</li>
 </ul>
-<h2 id="installation-from-the-distribution-packages">Installation from the distribution packages</h2>
-<p>The first way is easy to install. It is a recommended way. I’ve installed Gtk4 packages in Ubuntu 21.04. (Now, my Ubuntu version is 21.10).</p>
+<h2 id="instalación-desde-los-paquetes-de-la-distribución">Instalación desde los paquetes de la distribución</h2>
+<p>La primera manera es la más fácil de instalar, y la recomendada.</p>
+<p>Se ha probado usando Ubuntu 22.04 que es la versión mas reciente de Ubuntu.</p>
 <pre><code>$ sudo apt-get install libgtk-4-bin libgtk-4-common libgtk-4-dev libgtk-4-doc</code></pre>
-<p>Fedora, Arch, Debian and OpenSUSE are also possible. See <a href="https://www.gtk.org/docs/installations/linux#installing-gtk-from-packages">Installing GTK from packages</a>. The following table shows the distributions which support Gtk4.</p>
+<p>También es posible en Fedora, Arch, Debian y OpenSUSE. Ver <a href="https://www.gtk.org/docs/installations/linux#installing-gtk-from-packages">Installing GTK from packages</a>. La siguiente tabla muestra las distribuciones que soportan Gtk4.</p>
 <table>
 <thead>
 <tr class="header">
-<th style="text-align: center;">Distribution</th>
+<th style="text-align: center;">Distribución</th>
 <th style="text-align: center;">version</th>
 <th style="text-align: center;">Gtk4</th>
 <th style="text-align: center;">Gnome40</th>
@@ -173,22 +176,22 @@
 </tr>
 </tbody>
 </table>
-<p>If you’ve installed Gtk4 from the packages, you don’t need to read the rest of this section.</p>
-<h2 id="installation-from-the-source-file">Installation from the source file</h2>
-<p>If your operating system doesn’t have Gtk4 packages, you need to build it from the source. Or, if you want the latest version of Gtk4 (4.6.3), you also need to build it from the source.</p>
-<p>I installed Gtk4 from the source in January 2021. So, the following information is old, especially for the version of each software. For the latest information, see <a href="https://docs.gtk.org/gtk4/building.html">Gtk API Reference, Building GTK</a>.</p>
-<h3 id="prerequisites-for-gtk4-installation">Prerequisites for Gtk4 installation</h3>
+<p>Si has instalado Gtk4 desde los paquetes, no necesitas leer el resto de esta sección.</p>
+<h2 id="instalación-desde-los-archivos-fuente">Instalación desde los archivos fuente</h2>
+<p>Si tu sistema operativo no tiene los paquetes de Gtk4 o deseas tener la versión mas reciente, necesitas compilarlo desde la fuente.</p>
+<p>Se ha probado la instalación desde la fuente en Enero 2021. Por lo tanto la siguiente información es antigua, specialmente la versión de cada software. Para la información mas reciente, ve <a href="https://docs.gtk.org/gtk4/building.html">Gtk API Reference, Building GTK</a>.</p>
+<h3 id="requisitos-para-instalar-gtk4-desde-la-fuente">Requisitos para instalar Gtk4 desde la fuente</h3>
 <ul>
-<li>Linux operating system. For example, Ubuntu 20.10 or 20.04LTS. Other distributions might be OK.</li>
-<li>Packages for development such as gcc, meson, ninja, git, wget and so on.</li>
-<li>Dev package is necessary for each software below.</li>
+<li>Sistema operativo Linux, por ejemplo, Ubuntu 22.04 LTS</li>
+<li>Paquetes de desarrollo como gcc, meson, ninja, git, wget, etc.</li>
+<li>Los paquetes dev son necesarios para cada software a continuación.</li>
 </ul>
-<h3 id="installation-target">Installation target</h3>
-<p>I installed Gtk4 under the directory <code>$HOME/local</code>. This is a private user area.</p>
-<p>If you want to install it in the system area, <code>/opt/gtk4</code> is one of good choices. <a href="https://docs.gtk.org/gtk4/building.html">Gtk API Reference, Building GTK</a> gives an installation example to <code>/opt/gtk4</code>.</p>
-<p>Don’t install it to <code>/usr/local</code> which is the default. It is used by Ubuntu applications which are not build on Gtk4. Therefore, the risk is high and probably bad things will happen. Actually I did it and I needed to reinstall Ubuntu.</p>
-<h3 id="installation-to-ubuntu-20.10">Installation to Ubuntu 20.10</h3>
-<p>Most of the necessary libraries are included by Ubuntu 20.10. Therefore, they can be installed with <code>apt-get</code> command. You don’t need to install them from the source tarballs. You can skip the subsections below about prerequisite library installation (Glib, Pango, Gdk-pixbuf and Gtk-doc).</p>
+<h3 id="objetivo-de-la-instalación">Objetivo de la instalación</h3>
+<p>Se ha instalado Gtk4 dentro del directorio <code>$HOME/local</code>. esta es una área privada del usuario.</p>
+<p>Si deseas instalarlo en el área del sistema, <code>/opt/gtk4</code> es un buen lugar. <a href="https://docs.gtk.org/gtk4/building.html">Gtk API Reference, Building GTK</a> te da una buena descripción para hacerlo en <code>/opt/gtk4</code>.</p>
+<p>Nunca lo instales en <code>/usr/local</code> que es el predeterminado. Es usado por las aplicaciones de Ubuntu que no han sido construidas con Gtk4. Entonces hay altas probabilidades de dañar algo.</p>
+<h3 id="instalación-en-ubuntu-21.10">Instalación en Ubuntu 21.10+</h3>
+<p>La mayoría de las bibliotecas están incluídas por Ubuntu 20.10+. Por lo tanto puede ser instalado con <code>apt-get</code>. Y no es necesario instalarla desde los archivos fuente. Puedes saltarte las secciones siguientes (Glib, Pango, Gdk-pixbuf y Gtk-doc).</p>
 <h3 id="glib-installation">Glib installation</h3>
 <p>If your Ubuntu is 20.04LTS, you need to install prerequisite libraries from the tarballs. Check the version of your library and if it is lower than the necessary version, install it from the source.</p>
 <p>For example,</p>

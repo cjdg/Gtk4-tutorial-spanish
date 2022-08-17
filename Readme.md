@@ -26,7 +26,7 @@ La vieja documentación se encuentra en [Gtk Reference Manual](https://developer
 El nuevo sitio se encuentra en progreso actualmente, asi que a veces tendrás que revisar la vieja version
 
 Si deseas conocer mas acerca de GObject y el sistema de tipos, por favor lee [GObject tutorial](https://github.com/ToshioCP/Gobject-tutorial).
-Los detalles de GObject son fáciles de entender y necesarios para escribir programas en Gtk4.
+Los detalles de GObje1ct son fáciles de entender y necesarios para escribir programas en Gtk4.
 
 
 
@@ -51,7 +51,7 @@ Escribe `rake html` para HTML.
 Escribe `rake pdf` para PDF.
 Existe una documentación \("[Cómo construir el Tutorial Gtk4](src/gfm/Readme_for_developers.md)"\) que describe como hacerlo.
 
-## Table of contents
+## Tabla de contenidos
 
 1. [Prerequisite and License](gfm/sec1.md)
 1. [Installing Gtk4 into Linux distributions](gfm/sec2.md)

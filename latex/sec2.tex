@@ -1,47 +1,50 @@
-\hypertarget{installing-gtk4-into-linux-distributions}{%
-\section{Installing Gtk4 into Linux
-distributions}\label{installing-gtk4-into-linux-distributions}}
+\hypertarget{instalar-gtk4-en-linux}{%
+\section{Instalar Gtk4 en Linux}\label{instalar-gtk4-en-linux}}
 
-This section describes how to install Gtk4 into Linux distributions.
+Esta sección describe como instalar Gtk4 en las distribuciones Linux.
 
-This tutorial is without any warranty. If you want to install Gtk4 to
-your computer, do it at your own risk.
+No hay garantía.
 
-The information in this section is the one on April/27/2022. The words
-`at present' and/or `now' in this section means `April/27/2022'.
+Si instalas Gtk4 es bajo tu propio riesgo.
 
-There are three possible way to install Gtk4.
+La inforación de esta sección es del 27 de Abril de 2022.
+
+Las palabras `actualmente' y/o ``ahora'' en esta sección se ubican en
+esta fecha.
+
+Existen 3 maneras de instalar Gtk4.
 
 \begin{itemize}
 \tightlist
 \item
-  Install it from the distribution packages.
+  Paquetes de la distribución.
 \item
-  Build it from the source file.
+  Compilarlo desde la fuente.
 \item
-  Install a Gnome 40 distribution with the gnome-boxes.
+  Instalar una distribución con Gnome 40 y gnome-boxes.
 \end{itemize}
 
-\hypertarget{installation-from-the-distribution-packages}{%
-\subsection{Installation from the distribution
-packages}\label{installation-from-the-distribution-packages}}
+\hypertarget{instalaciuxf3n-desde-los-paquetes-de-la-distribuciuxf3n}{%
+\subsection{Instalación desde los paquetes de la
+distribución}\label{instalaciuxf3n-desde-los-paquetes-de-la-distribuciuxf3n}}
 
-The first way is easy to install. It is a recommended way. I've
-installed Gtk4 packages in Ubuntu 21.04. (Now, my Ubuntu version is
-21.10).
+La primera manera es la más fácil de instalar, y la recomendada.
+
+Se ha probado usando Ubuntu 22.04 que es la versión mas reciente de
+Ubuntu.
 
 \begin{lstlisting}
 $ sudo apt-get install libgtk-4-bin libgtk-4-common libgtk-4-dev libgtk-4-doc
 \end{lstlisting}
 
-Fedora, Arch, Debian and OpenSUSE are also possible. See
+También es posible en Fedora, Arch, Debian y OpenSUSE. Ver
 \href{https://www.gtk.org/docs/installations/linux\#installing-gtk-from-packages}{Installing
-GTK from packages}. The following table shows the distributions which
-support Gtk4.
+GTK from packages}. La siguiente tabla muestra las distribuciones que
+soportan Gtk4.
 
 \begin{longtable}[]{@{}cccc@{}}
 \toprule
-Distribution & version & Gtk4 & Gnome40\tabularnewline
+Distribución & version & Gtk4 & Gnome40\tabularnewline
 \midrule
 \endhead
 Fedora & 36 & 4.4.2 & Gnome42\tabularnewline
@@ -53,65 +56,62 @@ OpenSUSE & Tumbleweed(rolling release) & 4.6.5 & Gnome42\tabularnewline
 \bottomrule
 \end{longtable}
 
-If you've installed Gtk4 from the packages, you don't need to read the
-rest of this section.
+Si has instalado Gtk4 desde los paquetes, no necesitas leer el resto de
+esta sección.
 
-\hypertarget{installation-from-the-source-file}{%
-\subsection{Installation from the source
-file}\label{installation-from-the-source-file}}
+\hypertarget{instalaciuxf3n-desde-los-archivos-fuente}{%
+\subsection{Instalación desde los archivos
+fuente}\label{instalaciuxf3n-desde-los-archivos-fuente}}
 
-If your operating system doesn't have Gtk4 packages, you need to build
-it from the source. Or, if you want the latest version of Gtk4 (4.6.3),
-you also need to build it from the source.
+Si tu sistema operativo no tiene los paquetes de Gtk4 o deseas tener la
+versión mas reciente, necesitas compilarlo desde la fuente.
 
-I installed Gtk4 from the source in January 2021. So, the following
-information is old, especially for the version of each software. For the
-latest information, see
+Se ha probado la instalación desde la fuente en Enero 2021. Por lo tanto
+la siguiente información es antigua, specialmente la versión de cada
+software. Para la información mas reciente, ve
 \href{https://docs.gtk.org/gtk4/building.html}{Gtk API Reference,
 Building GTK}.
 
-\hypertarget{prerequisites-for-gtk4-installation}{%
-\subsubsection{Prerequisites for Gtk4
-installation}\label{prerequisites-for-gtk4-installation}}
+\hypertarget{requisitos-para-instalar-gtk4-desde-la-fuente}{%
+\subsubsection{Requisitos para instalar Gtk4 desde la
+fuente}\label{requisitos-para-instalar-gtk4-desde-la-fuente}}
 
 \begin{itemize}
 \tightlist
 \item
-  Linux operating system. For example, Ubuntu 20.10 or 20.04LTS. Other
-  distributions might be OK.
+  Sistema operativo Linux, por ejemplo, Ubuntu 22.04 LTS
 \item
-  Packages for development such as gcc, meson, ninja, git, wget and so
-  on.
+  Paquetes de desarrollo como gcc, meson, ninja, git, wget, etc.
 \item
-  Dev package is necessary for each software below.
+  Los paquetes dev son necesarios para cada software a continuación.
 \end{itemize}
 
-\hypertarget{installation-target}{%
-\subsubsection{Installation target}\label{installation-target}}
+\hypertarget{objetivo-de-la-instalaciuxf3n}{%
+\subsubsection{Objetivo de la
+instalación}\label{objetivo-de-la-instalaciuxf3n}}
 
-I installed Gtk4 under the directory
-\passthrough{\lstinline!$HOME/local!}. This is a private user area.
+Se ha instalado Gtk4 dentro del directorio
+\passthrough{\lstinline!$HOME/local!}. esta es una área privada del
+usuario.
 
-If you want to install it in the system area,
-\passthrough{\lstinline!/opt/gtk4!} is one of good choices.
+Si deseas instalarlo en el área del sistema,
+\passthrough{\lstinline!/opt/gtk4!} es un buen lugar.
 \href{https://docs.gtk.org/gtk4/building.html}{Gtk API Reference,
-Building GTK} gives an installation example to
+Building GTK} te da una buena descripción para hacerlo en
 \passthrough{\lstinline!/opt/gtk4!}.
 
-Don't install it to \passthrough{\lstinline!/usr/local!} which is the
-default. It is used by Ubuntu applications which are not build on Gtk4.
-Therefore, the risk is high and probably bad things will happen.
-Actually I did it and I needed to reinstall Ubuntu.
+Nunca lo instales en \passthrough{\lstinline!/usr/local!} que es el
+predeterminado. Es usado por las aplicaciones de Ubuntu que no han sido
+construidas con Gtk4. Entonces hay altas probabilidades de dañar algo.
 
-\hypertarget{installation-to-ubuntu-20.10}{%
-\subsubsection{Installation to Ubuntu
-20.10}\label{installation-to-ubuntu-20.10}}
+\hypertarget{instalaciuxf3n-en-ubuntu-21.10}{%
+\subsubsection{Instalación en Ubuntu
+21.10+}\label{instalaciuxf3n-en-ubuntu-21.10}}
 
-Most of the necessary libraries are included by Ubuntu 20.10. Therefore,
-they can be installed with \passthrough{\lstinline!apt-get!} command.
-You don't need to install them from the source tarballs. You can skip
-the subsections below about prerequisite library installation (Glib,
-Pango, Gdk-pixbuf and Gtk-doc).
+La mayoría de las bibliotecas están incluídas por Ubuntu 20.10+. Por lo
+tanto puede ser instalado con \passthrough{\lstinline!apt-get!}. Y no es
+necesario instalarla desde los archivos fuente. Puedes saltarte las
+secciones siguientes (Glib, Pango, Gdk-pixbuf y Gtk-doc).
 
 \hypertarget{glib-installation}{%
 \subsubsection{Glib installation}\label{glib-installation}}

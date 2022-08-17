@@ -92,9 +92,9 @@ task md: %w[Readme.md] + mdsts(srcfiles)
 file "Readme.md" => [abstract] + secfiles do
   abstract_md = mdst(abstract)
   src2md(abstract, "gfm")
-  buf = ["# Gtk4 Tutorial for beginners\n\nThe github page of this tutorial is also available. Click [here](https://toshiocp.github.io/Gtk4-tutorial/).\n\n"]\
+  buf = ["# Tutorial Gtk4 para principiantes\n\nPagina Github disponible [aqui](https://cjdg.github.io/Gtk4-tutorial-spanish///).\n\n"]\
         + File.readlines(abstract_md)\
-        + ["\n## Table of contents\n\n"]
+        + ["\n## Contenido\n\n"]
   File.delete(abstract_md)
   secfiles.each_with_index do |secfile, i|
     h = File.open(secfile){|file| file.readline}.sub(/^#* */,"").chomp
@@ -130,9 +130,9 @@ task html: %W[docs/index.html] + hdsts(srcfiles) + idsts(imagefiles)
 file "docs/index.html" => [abstract] + secfiles do
   abstract_md = "docs/#{to_md(abstract)}"
   src2md(abstract, "html")
-  buf = [ "# Gtk4 Tutorial for beginners\n\n" ]\
+  buf = [ "# Tutorial Gtk4 para principiantes \n\n" ]\
         + File.readlines(abstract_md)\
-        + ["\n## Table of contents\n\n"]
+        + ["\n## Contenido\n\n"]
   File.delete(abstract_md)
   secfiles.each_with_index do |secfile, i|
     h = File.open(secfile){|file| file.readline}.sub(/^#* */,"").chomp
@@ -141,7 +141,7 @@ file "docs/index.html" => [abstract] + secfiles do
   buf << "\nThis website uses [Bootstrap](https://getbootstrap.jp/)."
   File.write("docs/index.md", buf.join)
   mk_html_template(nil, nil, nil)
-  sh "pandoc -s --template=docs/template.html --metadata=title:\"Gtk4 tutorial\" -o docs/index.html docs/index.md"
+  sh "pandoc -s --template=docs/template.html --metadata=title:\"Tutorial Gtk4\" -o docs/index.html docs/index.md"
   File.delete "docs/index.md"
   File.delete "docs/template.html"
 end
@@ -164,7 +164,7 @@ srcfiles.each_with_index do |src, i|
     else
       mk_html_template("index.html", nil, nil)
     end
-    sh "pandoc -s --template=docs/template.html --metadata=title:\"Gtk4 tutorial\" -o #{dst} #{html_md}"
+    sh "pandoc -s --template=docs/template.html --metadata=title:\"Tutorial Gtk4\" -o #{dst} #{html_md}"
     File.delete(html_md)
     File.delete "docs/template.html"
   end

@@ -2,17 +2,17 @@
 \contentsline {paragraph}{Documentación Gtk4}{1}{section*.2}%
 \contentsline {paragraph}{Contribución}{1}{section*.3}%
 \contentsline {paragraph}{Como obtener una versión HTML o PDF}{1}{section*.4}%
-\contentsline {section}{\numberline {1}Prerequisite and License}{8}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Prerequisite}{8}{subsection.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.1}Gtk4 on a Linux OS}{8}{subsubsection.1.1.1}%
-\contentsline {subsubsection}{\numberline {1.1.2}Ruby and rake for making the document}{8}{subsubsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.2}License}{8}{subsection.1.2}%
-\contentsline {section}{\numberline {2}Installing Gtk4 into Linux distributions}{8}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Installation from the distribution packages}{8}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Installation from the source file}{9}{subsection.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.1}Prerequisites for Gtk4 installation}{9}{subsubsection.2.2.1}%
-\contentsline {subsubsection}{\numberline {2.2.2}Installation target}{9}{subsubsection.2.2.2}%
-\contentsline {subsubsection}{\numberline {2.2.3}Installation to Ubuntu 20.10}{9}{subsubsection.2.2.3}%
+\contentsline {section}{\numberline {1}Prerequisitos y licencia}{8}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Prerequisitos}{8}{subsection.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.1}Gtk4 en Linux}{8}{subsubsection.1.1.1}%
+\contentsline {subsubsection}{\numberline {1.1.2}Ruby y rake para crear la documentación}{8}{subsubsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.2}Licencia}{8}{subsection.1.2}%
+\contentsline {section}{\numberline {2}Instalar Gtk4 en Linux}{8}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Instalación desde los paquetes de la distribución}{9}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Instalación desde los archivos fuente}{9}{subsection.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.1}Requisitos para instalar Gtk4 desde la fuente}{9}{subsubsection.2.2.1}%
+\contentsline {subsubsection}{\numberline {2.2.2}Objetivo de la instalación}{9}{subsubsection.2.2.2}%
+\contentsline {subsubsection}{\numberline {2.2.3}Instalación en Ubuntu 21.10+}{9}{subsubsection.2.2.3}%
 \contentsline {subsubsection}{\numberline {2.2.4}Glib installation}{9}{subsubsection.2.2.4}%
 \contentsline {subsubsection}{\numberline {2.2.5}Pango installation}{10}{subsubsection.2.2.5}%
 \contentsline {subsubsection}{\numberline {2.2.6}Gdk-pixbuf and Gtk-doc installation}{11}{subsubsection.2.2.6}%

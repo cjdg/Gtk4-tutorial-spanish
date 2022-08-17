@@ -1,4 +1,4 @@
-This is LuaHBTeX, Version 1.14.0 (TeX Live 2022/dev/Debian)  (format=lualatex 2022.5.19)  15 AUG 2022 15:38
+This is LuaHBTeX, Version 1.14.0 (TeX Live 2022/dev/Debian)  (format=lualatex 2022.5.19)  17 AUG 2022 17:44
  restricted system commands enabled.
 **main.tex
 (./main.tex
@@ -593,6 +593,9 @@ LaTeX Warning: Label `signals' multiply defined.
 
 
 LaTeX Warning: Label `signals-1' multiply defined.
+
+
+LaTeX Warning: Label `prerequisitos' multiply defined.
 
 )
 \openout1 = main.aux
@@ -1583,28 +1586,32 @@ warning  (pdf backend): ignoring duplicate destination with the name 'signals'
 [226] [227]
 warning  (pdf backend): ignoring duplicate destination with the name 'signals-1'
 
-) (./Readme_for_developers.tex [228] [229] [230] [231]
-<../image/state_diagram.png, id=10039, 240.9pt x 135.6267pt>
+) (./Readme_for_developers.tex
+warning  (pdf backend): ignoring duplicate destination with the name 'prerequisi
+tos'
+[228] [229] [230] [231]
+<../image/state_diagram.png, id=10038, 240.9pt x 135.6267pt>
 File: ../image/state_diagram.png Graphic file (type png)
 <use ../image/state_diagram.png>
 Package luatex.def Info: ../image/state_diagram.png  used on input line 364.
 (luatex.def)             Requested size: 426.83406pt x 239.00378pt.
- [232<../image/state_diagram.png>] [233] [234] [235]) [236] (./main.aux)
+ [232<../image/state_diagram.png>] [233] [234] [235])
+[236] (./main.aux)
 
 LaTeX Warning: There were multiply-defined labels.
 
 )
 
 Here is how much of LuaTeX's memory you used:
- 35359 strings out of 477805
- 596560,1373583 words of node,token memory allocated
+ 35357 strings out of 477805
+ 596569,1373583 words of node,token memory allocated
  651 words of node memory still in use:
    7 hlist, 2 vlist, 2 rule, 1 local_par, 4 glue, 4 kern, 1 penalty, 2 glyph, 17
  attribute, 58 glue_spec, 17 attribute_list, 1 write, 9 pdf_action nodes
-   avail lists: 1:5,2:6038,3:564,4:1198,5:7713,6:161,7:39389,8:133,9:17370,10:19
+   avail lists: 1:4,2:6038,3:561,4:1198,5:7713,6:163,7:39389,8:133,9:17370,10:19
 ,11:707
- 45895 multiletter control sequences out of 65536+600000
- 64 fonts using 19308299 bytes
+ 45894 multiletter control sequences out of 65536+600000
+ 64 fonts using 19308223 bytes
  93i,6n,121p,1000b,988s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/share/texmf/fonts/opentype/public/lm/lmmono10-regular.otf></usr/share/texm
 f/fonts/opentype/public/lm/lmroman9-regular.otf></usr/share/texmf/fonts/opentype
@@ -1614,10 +1621,10 @@ sr/share/texmf/fonts/opentype/public/lm/lmroman10-regular.otf></usr/share/texmf/
 fonts/opentype/public/lm/lmroman10-bold.otf></usr/share/texmf/fonts/opentype/pub
 lic/lm/lmroman12-regular.otf></usr/share/texmf/fonts/opentype/public/lm/lmroman1
 7-regular.otf>
-Output written on main.pdf (236 pages, 2458434 bytes).
+Output written on main.pdf (236 pages, 2458374 bytes).
 
-PDF statistics: 11255 PDF objects out of 12825 (max. 8388607)
- 10767 compressed objects within 108 object streams
- 8741 named destinations out of 8907 (max. 131072)
+PDF statistics: 11254 PDF objects out of 12825 (max. 8388607)
+ 10766 compressed objects within 108 object streams
+ 8740 named destinations out of 8907 (max. 131072)
  2177 words of extra memory for PDF output out of 10000 (max. 100000000)
 
